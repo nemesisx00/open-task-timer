@@ -1,0 +1,11 @@
+.row
+{
+	background-color: #666;
+	border-top: 1px solid #999;
+}
+.row:first-child { border-top: 0 none; }
+
+.row.command
+{
+	background-color: #333;
+}

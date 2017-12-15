@@ -1,0 +1,10 @@
+@import url('./layout.css');
+@import url('./visual.css');
+
+html, body
+{
+	padding: 0;
+	margin: 0;
+	height: 100%;
+	overflow: hidden;
+}

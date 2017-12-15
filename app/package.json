@@ -1,0 +1,12 @@
+{
+  "name": "open-task-timer",
+  "version": "0.1.0",
+  "description": "Open Task Timer built with Electron",
+  "author": {
+    "name": "Peter Lunneberg",
+    "email": "plunn.dev+opentasktimer@gmail.com"
+  },
+  "license": "MIT",
+  "main": "javascripts/main/index.js",
+  "dependencies": {}
+}
