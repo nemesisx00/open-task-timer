@@ -30,8 +30,8 @@ The MIT License (MIT) © Peter Lunneberg 2017
 
 ## Third Party Resources
 
-Bozon - [https://github.com/railsware/bozon](https://github.com/railsware/bozon)
+> Bozon - [https://github.com/railsware/bozon](https://github.com/railsware/bozon)
 
-Electron - [https://electronjs.org/](https://electronjs.org/)
+> Electron - [https://electronjs.org/](https://electronjs.org/)
 
-Open Iconic — [https://useiconic.com/open](https://useiconic.com/open)
+> Open Iconic — [https://useiconic.com/open](https://useiconic.com/open)
