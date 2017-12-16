@@ -11,10 +11,10 @@ app.on('ready', () => {
 		height: json.settings.height
 	})
 	
+	window.setMinimumSize(json.settings.minWidth, json.settings.minHeight)
+	
 	const menu = Menu.buildFromTemplate(menuTemplate)
 	Menu.setApplicationMenu(menu)
-	
-	window.toggleDevTools()
 	
 	window.loadURL('file://' + path.join(__dirname, '..', '..') + '/index.html')
 	

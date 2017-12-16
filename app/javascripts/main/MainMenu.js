@@ -8,8 +8,13 @@ module.exports = [
 				label: 'Open',
 				click () { }
 			},
-			{ role: 'toggledevtools' },
 			{ role: 'close' }
+		]
+	},
+	{
+		label: 'Dev',
+		submenu: [
+			{ role: 'toggledevtools' }
 		]
 	}
 ]

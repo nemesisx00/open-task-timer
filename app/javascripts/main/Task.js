@@ -32,10 +32,10 @@ const defaultFormatter = duration => {
 	return out
 }
 
-const generateHtml = (label, currentElapsed, active) => {
+const generateHtml = (self, title, currentElapsed, active) => {
 	let labelDiv = Object.assign(document.createElement('div'), {
-		className: 'label',
-		innerHTML: label
+		className: 'title',
+		innerHTML: title
 	})
 	
 	let elapsed = Object.assign(document.createElement('div'), {
@@ -44,12 +44,19 @@ const generateHtml = (label, currentElapsed, active) => {
 	})
 	
 	let button = Object.assign(document.createElement('div'), {
-		className: 'button',
-		innerHTML: active ? 'Stop' : 'Start'
+		className: 'button' + (active ? ' active' : '')
+	})
+	
+	button.addEventListener('click', () => {
+		if(!self.isActive())
+			self.start()
+		else
+			self.stop()
+		console.log(self)
 	})
 	
 	let out = Object.assign(document.createElement('div'), {
-		className: 'row'
+		className: 'row task'
 	})
 	out.append(labelDiv)
 	out.append(elapsed)
@@ -75,7 +82,11 @@ const toggleActive = (elements, isActive) => {
 	}
 	
 	if(elements.button != null)
-		elements.button.innerHTML = isActive ? 'Stop' : 'Start'
+	{
+		elements.button.className = elements.button.className.replace('active').trim()
+		if(isActive)
+			elements.button.className += ' active'
+	}
 }
 
 class Task
@@ -84,7 +95,6 @@ class Task
 	{
 		this.id = id
 		this.title = title
-		this.duration = 0
 		this.elapsed = 0
 		
 		this.elements = {
@@ -97,14 +107,14 @@ class Task
 		this.timer = null
 		
 		this.delay = options && typeof options.delay === 'number' ? options.delay : defaultDelay
+		this.duration = options && typeof options.duraction === 'number' ? options.duration : 0
 		this.formatter = options && typeof options.formatter === 'function' ? options.formatter : defaultFormatter
 		
 		if(options && options.generateRow)
 		{
-			this.elements.main = generateHtml(this.title, this.formatter(this.duration), false)
+			this.elements.main = generateHtml(this, this.title, this.formatter(this.duration), false)
 			this.elements.main.id = `task-${this.id}`
-			document.querySelector('body').append(this.elements.main)
-			
+			document.getElementById('container').append(this.elements.main)
 		}
 	}
 	
@@ -117,6 +127,15 @@ class Task
 			{
 				this.elements.main = el
 				this.elements.main.id = `task-${this.id}`
+				
+				let self = this
+				document.querySelector(`#${this.elements.main.id} .button`).addEventListener('click', () => {
+					if(!self.isActive())
+						self.start()
+					else
+						self.stop()
+					console.log(self)
+				})
 			}
 		}
 	}

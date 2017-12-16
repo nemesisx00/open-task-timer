@@ -1,11 +1,50 @@
+html, body
+{
+	color: #F0EAD6;
+	background-color: #2A2B2A;
+}
+
 .row
 {
-	background-color: #666;
-	border-top: 1px solid #999;
+	background-color: #465362;
+	border-top: 1px solid #343330;
 }
 .row:first-child { border-top: 0 none; }
 
-.row.command
+.row.alt { background-color: #314459; }
+
+.row .title { font-size: 1.5em; }
+.row .elapsed { font-size: 1.5em; }
+
+.row .button
 {
-	background-color: #333;
+	cursor: pointer;
+	border-radius: 5px;
+	border: 1px solid #343330;
+	
+	background-size: 1.2em;
+	background-color: #2D882D;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-image: url('../images/open-iconic-master/svg/media-play.svg');
 }
+
+.row .button.active
+{
+	background-color: #AA3939;
+	background-image: url('../images/open-iconic-master/svg/media-stop.svg');
+}
+
+#command { background-color: #494949; }
+
+#command input
+{
+	min-width: 0;
+	color: #F0EAD6;
+	border: 0 none;
+	padding: 2px;
+	font-size: 1.5em;
+	background-color: rgba(255, 255, 255, 0.2);
+}
+
+#createNewEntry { background-image: url('../images/open-iconic-master/svg/plus.svg'); }
