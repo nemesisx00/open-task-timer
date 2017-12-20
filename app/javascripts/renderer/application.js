@@ -1,46 +1,40 @@
-//const {ipcRenderer} = require('electron')
-const Task = require('../main/Task.js')
+const {ipcRenderer} = require('electron')
+
+const TaskUi = require('./lib/TaskUi')
+
+let ui = []
+
+let titleInput = document.getElementById('newLabel')
+
+ipcRenderer.on('task-created', (event, arg) => {
+	if(arg && arg.id > 0 && typeof arg.title === 'string' && typeof arg.duration === 'number')
+	{
+		let taskUi = new TaskUi(arg)
+		
+		ui.push(taskUi)
+		taskUi.append()
+		titleInput.value = ''
+	}
+})
+
+ipcRenderer.on('tasks-opened', (event, arg) => {
+	ipcRenderer.on('log', arg)
+})
 
 document.addEventListener('DOMContentLoaded', () => {
 	setupListeners()
-	setupForDev()
 })
-
-function getNextTaskId()
-{
-	let out = 0
-	
-	document.querySelectorAll('.task').forEach(el => {
-		let id = Number.parseInt(el.id.replace('task-', ''))
-		if(id > out)
-			out = id
-	})
-	
-	return out + 1
-}
 
 function taskCreateHandler()
 {
-	let input = document.getElementById('newLabel')
-	if(input && typeof input.value === 'string' && input.value.length > 0)
+	if(titleInput && typeof titleInput.value === 'string' && titleInput.value.length > 0
+		&& ![document.querySelectorAll('.task .title')].find(t => t.innerHTML === titleInput.value))
 	{
-		let task = new Task(getNextTaskId(), input.value, { generateRow: true })
-		if(task)
-			input.value = ''
+		ipcRenderer.send('task-new', { title: titleInput.value })
 	}
 }
 
 function setupListeners()
 {
 	document.getElementById('createNewEntry').addEventListener('click', taskCreateHandler)
-}
-
-function setupForDev()
-{
-	let rows = [
-		new Task(getNextTaskId(), 'My Task 1', { generateRow: true, duration: 87 }),
-		new Task(getNextTaskId(), 'My New Task', { generateRow: true, duration: 13 })
-	]
-	
-	return rows
 }

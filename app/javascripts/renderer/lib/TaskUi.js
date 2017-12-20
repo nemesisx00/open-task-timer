@@ -1,5 +1,7 @@
 'use strict'
 
+const {ipcRenderer} = require('electron')
+
 const defaultDelay = 1000
 
 const defaultFormatter = duration => {
@@ -32,7 +34,7 @@ const defaultFormatter = duration => {
 	return out
 }
 
-const generateHtml = (self, title, currentElapsed, active) => {
+const generateElements = (self, id, title, currentElapsed, active) => {
 	let labelDiv = Object.assign(document.createElement('div'), {
 		className: 'title',
 		innerHTML: title
@@ -52,17 +54,24 @@ const generateHtml = (self, title, currentElapsed, active) => {
 			self.start()
 		else
 			self.stop()
-		console.log(self)
+		
+		ipcRenderer.send('log', self)
 	})
 	
 	let out = Object.assign(document.createElement('div'), {
 		className: 'row task'
 	})
+	out.id = id
+	
 	out.append(labelDiv)
 	out.append(elapsed)
 	out.append(button)
 	
-	return out
+	return {
+		main: out,
+		elapsed: elapsed,
+		button: button
+	}
 }
 
 const getDifference = start => {
@@ -74,83 +83,30 @@ const getDifference = start => {
 }
 
 const toggleActive = (elements, isActive) => {
-	if(elements.button == null && elements.main != null)
-	{
-		let el = document.querySelector(`#${elements.main.id} .button`)
-		if(el && el instanceof Element)
-			elements.button = el
-	}
-	
-	if(elements.button != null)
-	{
-		elements.button.className = elements.button.className.replace('active').trim()
-		if(isActive)
-			elements.button.className += ' active'
-	}
+	elements.button.className = elements.button.className.replace('active').trim()
+	if(isActive)
+		elements.button.className += ' active'
 }
 
-class Task
+class TaskUi
 {
-	constructor(id, title, options)
+	constructor(task, options)
 	{
-		this.id = id
-		this.title = title
+		this.task = task
+		
 		this.elapsed = 0
-		
-		this.elements = {
-			main: null,
-			elapsed: null,
-			button: null
-		}
-		
 		this.lastStart = null
 		this.timer = null
 		
 		this.delay = options && typeof options.delay === 'number' ? options.delay : defaultDelay
-		this.duration = options && typeof options.duraction === 'number' ? options.duration : 0
 		this.formatter = options && typeof options.formatter === 'function' ? options.formatter : defaultFormatter
 		
-		if(options && options.generateRow)
-		{
-			this.elements.main = generateHtml(this, this.title, this.formatter(this.duration), false)
-			this.elements.main.id = `task-${this.id}`
-			document.getElementById('container').append(this.elements.main)
-		}
+		this.elements = generateElements(this, `task-${this.task.id}`, this.task.title, this.formatter(this.task.duration), false)
 	}
 	
-	bind(selector)
+	append()
 	{
-		if(selector && typeof selector === 'string')
-		{
-			let el = document.querySelector(selector)
-			if(el instanceof Element)
-			{
-				this.elements.main = el
-				this.elements.main.id = `task-${this.id}`
-				
-				let self = this
-				document.querySelector(`#${this.elements.main.id} .button`).addEventListener('click', () => {
-					if(!self.isActive())
-						self.start()
-					else
-						self.stop()
-					console.log(self)
-				})
-			}
-		}
-	}
-	
-	updateDisplay()
-	{
-		if(this.elements.elapsed == null && this.elements.main != null)
-		{
-			let el = document.querySelector(`#${this.elements.main.id} .elapsed`)
-			if(el && el instanceof Element)
-				this.elements.elapsed = el
-		}
-		
-		if(this.elements.elapsed != null)
-			this.elements.elapsed.innerHTML = this.formatter(this.duration + this.elapsed)
+		document.getElementById('container').append(this.elements.main)
 	}
 	
 	isActive()
@@ -183,13 +139,43 @@ class Task
 		
 		this.timer = null
 		this.lastStart = null
-		this.duration += this.elapsed
+		this.task.duration += this.elapsed
 		this.elapsed = 0
 		
 		toggleActive(this.elements, false)
 		
 		return this
 	}
+	
+	toggleActive(active)
+	{
+		if(this.elements.button == null && this.elements.main != null)
+		{
+			let el = document.querySelector(`#${this.elements.main.id} .button`)
+			if(el && el instanceof Element)
+				this.elements.button = el
+		}
+		
+		if(this.elements.button != null)
+		{
+			this.elements.button.className = this.elements.button.className.replace('active').trim()
+			if(active)
+				this.elements.button.className += ' active'
+		}
+	}
+	
+	updateDisplay()
+	{
+		if(this.elements.elapsed == null && this.elements.main != null)
+		{
+			let el = document.querySelector(`#${this.elements.main.id} .elapsed`)
+			if(el && el instanceof Element)
+				this.elements.elapsed = el
+		}
+		
+		if(this.elements.elapsed != null)
+			this.elements.elapsed.innerHTML = this.formatter(this.task.duration + this.elapsed)
+	}
 }
 
-module.exports = Task
+module.exports = TaskUi
