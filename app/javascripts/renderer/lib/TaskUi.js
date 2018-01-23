@@ -54,8 +54,6 @@ const generateElements = (self, id, title, currentElapsed, active) => {
 			self.start()
 		else
 			self.stop()
-		
-		ipcRenderer.send('log', self)
 	})
 	
 	let out = Object.assign(document.createElement('div'), {
@@ -143,6 +141,8 @@ class TaskUi
 		this.elapsed = 0
 		
 		toggleActive(this.elements, false)
+		
+		ipcRenderer.send('task-update', this.task)
 		
 		return this
 	}

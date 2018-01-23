@@ -1,6 +1,6 @@
 {
   "name": "OpenTaskTimer",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "description": "Desktop application build with Electron",
   "repository": "",
   "scripts": {
@@ -15,10 +15,11 @@
     "webpack-stream": "^3.2.0"
   },
   "build": {
-    "appId": "com.electron.open task timer",
+    "appId": "us.plunn.opentasktimer",
+	"productName": "Open Task Timer",
     "win": {},
     "mac": {
-      "category": "your.app.category.type"
+      "category": "public.app-category.productivity"
     }
   }
 }

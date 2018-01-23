@@ -6,21 +6,32 @@ const menuTemplate = require('./lib/MainMenu')
 
 const Task = require('./lib/Task')
 
-let tasks = []
+global.activePath = null
+global.tasks = []
 
 ipcMain.on('task-new', (event, arg) => {
-	if(arg && arg.title && typeof arg.title === 'string' && !tasks.find(t => t.title === arg.title))
+	if(arg && arg.title && typeof arg.title === 'string' && !global.tasks.find(t => t.title === arg.title))
 	{
 		let duration = Number.parseInt(arg.duration)
 		if(Number.isNaN(duration))
 			duration = 0
 		
-		let id = tasks.reduce((acc, val) => val.id > acc ? val.id : acc, 0) + 1
+		let id = global.tasks.reduce((acc, val) => val.id > acc ? val.id : acc, 0) + 1
 		
 		let task = new Task(id, arg.title, duration)
 		
-		tasks.push(task)
+		global.tasks.push(task)
 		event.sender.send('task-created', task)
+	}
+})
+
+//Update a task's duration if it exists in the global tasks list
+ipcMain.on('task-update', (event, arg) => {
+	if(arg && arg.title)
+	{
+		let task = global.tasks.find(t => t.title === arg.title)
+		if(task)
+			task.duration = arg.duration
 	}
 })
 
