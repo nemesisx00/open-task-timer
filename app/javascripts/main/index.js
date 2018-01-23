@@ -9,6 +9,7 @@ const Task = require('./lib/Task')
 global.activePath = null
 global.tasks = []
 
+//Create a new task instance
 ipcMain.on('task-new', (event, arg) => {
 	if(arg && arg.title && typeof arg.title === 'string' && !global.tasks.find(t => t.title === arg.title))
 	{
@@ -35,6 +36,14 @@ ipcMain.on('task-update', (event, arg) => {
 	}
 })
 
+//Log messages from the browser context to the standard output
+ipcMain.on('log', (event, arg) => {
+	console.log('')
+	console.log(arg)
+	console.log('')
+})
+
+//Set up the main application window when the application is ready
 app.on('ready', () => {
 	var window = new BrowserWindow({
 		title: json.settings.title,
@@ -49,13 +58,8 @@ app.on('ready', () => {
 	
 	window.loadURL('file://' + path.join(__dirname, '..', '..') + '/index.html')
 	
-	window.on('closed', () => {
-		window = null
-	})
-	
-	ipcMain.on('log', (event, arg) => {
-		console.log('')
-		console.log(arg)
-		console.log('')
-	})
+	window.on('closed', () => { window = null })
 })
+
+//Clean up the processes when the appliation is closed
+app.on('window-all-closed', () => app.quit())
