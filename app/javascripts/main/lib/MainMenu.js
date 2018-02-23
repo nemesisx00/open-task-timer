@@ -1,7 +1,8 @@
 'use static'
 
 const {BrowserWindow} = require('electron')
-const Data = require('./Data.js')
+const Data = require('./Data')
+const Sender = require('./Sender')
 
 module.exports = [
 	{
@@ -13,7 +14,8 @@ module.exports = [
 					let loaded = Data.loadTasksFromFile()
 					global.tasks = loaded.tasks
 					global.activePath = loaded.path
-					BrowserWindow.getFocusedWindow().webContents.send('tasks-opened', global.tasks)
+					
+					Sender.tasksOpened(BrowserWindow.getFocusedWindow().webContents, global.tasks)
 				}
 			},
 			{

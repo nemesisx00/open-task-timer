@@ -7,16 +7,16 @@
     "postinstall": "install-app-deps"
   },
   "devDependencies": {
-    "electron-builder": "19.48.2",
     "electron": "1.7.9",
+    "electron-builder": "19.48.2",
     "gulp": "^3.9.1",
-    "mocha": "^4.0.1",
-    "spectron": "^3.7.2",
+    "mocha": "^4.1.0",
+    "spectron": "^3.8.0",
     "webpack-stream": "^3.2.0"
   },
   "build": {
     "appId": "us.plunn.opentasktimer",
-	"productName": "Open Task Timer",
+    "productName": "Open Task Timer",
     "win": {},
     "mac": {
       "category": "public.app-category.productivity"

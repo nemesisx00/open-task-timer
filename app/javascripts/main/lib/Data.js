@@ -2,6 +2,7 @@
 
 const fs = require('fs')
 const {BrowserWindow, dialog} = require('electron')
+const Sender = require('./Sender')
 const Task = require('./Task')
 const Util = require('./Util')
 
@@ -24,20 +25,6 @@ const defaultSaveOptions = Object.freeze({
 	]
 })
 
-const createTaskFromObj = obj => {
-	let task = null
-	
-	let id = Number.parseInt(obj.id)
-	let duration = Number.parseInt(obj.duration)
-	
-	if(obj && !Number.isNaN(id) && id > 0 && typeof obj.title === 'string' && !Number.isNaN(duration))
-	{
-		task = new Task(id, obj.title, duration)
-	}
-	
-	return task
-}
-
 const writeData = (window, path, data, truncate) => {
 	if(truncate)
 	{
@@ -50,7 +37,7 @@ const writeData = (window, path, data, truncate) => {
 					throw err2
 				
 				global.activePath = path
-				window.webContents.send('task-saved', path)
+				Sender.taskSaved(window.webContents, path)
 			})
 		})
 	}
@@ -61,7 +48,7 @@ const writeData = (window, path, data, truncate) => {
 				throw err
 			
 			global.activePath = path
-			window.webContents.send('task-saved', path)
+			Sender.taskSaved(window.webContents, path)
 		})
 	}
 }
@@ -92,21 +79,21 @@ class Data
 					if(Array.isArray(json))
 					{
 						json.forEach(obj => {
-							let task = createTaskFromObj(obj)
+							let task = Task.fromJson(obj)
 							if(task)
 							{
 								out.tasks.push(task)
-								window.webContents.send('task-created', task)
+								Sender.taskCreated(window.webContents, task)
 							}
 						})
 					}
 					else
 					{
-						let task = createTaskFromObj(json)
+						let task = Task.fromJson(json)
 						if(task)
 						{
 							out.tasks.push(task)
-							window.webContents.send('task-created', task)
+							Sender.taskCreated(window.webContents, task)
 						}
 					}
 				}
@@ -125,7 +112,7 @@ class Data
 		if(!exists)
 			path = dialog.showSaveDialog(window, defaultSaveOptions)
 		
-		writeData(window, path, tasks, exists)
+		writeData(window, path, tasks.map(t => t.toJson()), exists)
 	}
 }
 

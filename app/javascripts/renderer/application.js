@@ -1,40 +1,27 @@
-const {ipcRenderer} = require('electron')
+'use strict'
 
-const TaskUi = require('./lib/TaskUi')
+const Listener = require('./lib/Listener')
+const Sender = require('./lib/Sender')
 
-let ui = []
+global.ui = []
 
-let titleInput = document.getElementById('newLabel')
-
-ipcRenderer.on('task-created', (event, arg) => {
-	if(arg && arg.id > 0 && typeof arg.title === 'string' && typeof arg.duration === 'number')
-	{
-		let taskUi = new TaskUi(arg)
-		
-		ui.push(taskUi)
-		taskUi.append()
-		titleInput.value = ''
-	}
-})
-
-ipcRenderer.on('tasks-opened', (event, arg) => {
-	ipcRenderer.on('log', arg)
-})
+Listener.initialize()
 
 document.addEventListener('DOMContentLoaded', () => {
 	setupListeners()
 })
 
-function taskCreateHandler()
-{
-	if(titleInput && typeof titleInput.value === 'string' && titleInput.value.length > 0
-		&& ![document.querySelectorAll('.task .title')].find(t => t.innerHTML === titleInput.value))
-	{
-		ipcRenderer.send('task-new', { title: titleInput.value })
-	}
-}
-
 function setupListeners()
 {
 	document.getElementById('createNewEntry').addEventListener('click', taskCreateHandler)
+}
+
+function taskCreateHandler()
+{
+	let titleInput = document.getElementById('newLabel')
+	if(titleInput && typeof titleInput.value === 'string' && titleInput.value.length > 0
+		&& ![document.querySelectorAll('.task .title')].find(t => t.innerHTML === titleInput.value))
+	{
+		Sender.taskNew(titleInput.value)
+	}
 }

@@ -1,38 +1,18 @@
 'use strict'
 
-const {ipcRenderer} = require('electron')
+const moment = require('moment')
+require('moment-duration-format')
+
+const Sender = require('./Sender')
+
+const timestampFormat = 'Y-MM-DD hh:mm:ss'
+const timeFormat = 'h:mm:ss'
+const timeOptions = {
+	useGrouping: false
+}
 
 const defaultDelay = 1000
-
-const defaultFormatter = duration => {
-	let out = ''
-	if(typeof duration === 'number')
-	{
-		let hours = 0
-		let minutes = 0
-		let seconds = duration
-		
-		if(seconds > 60)
-		{
-			minutes = Math.floor(seconds / 60)
-			seconds = seconds % 60
-		}
-		
-		if(minutes > 60)
-		{
-			hours = Math.floor(minutes / 60)
-			minutes = minutes % 60
-		}
-		
-		hours = `${hours}`.padStart(2, 0)
-		minutes = `${minutes}`.padStart(2, 0)
-		seconds = `${seconds}`.padStart(2, 0)
-		
-		out = `${hours}:${minutes}:${seconds}`
-	}
-	
-	return out
-}
+const defaultFormatter = duration => moment.duration(duration, 'seconds').format(timeFormat, timeOptions)
 
 const generateElements = (self, id, title, currentElapsed, active) => {
 	let labelDiv = Object.assign(document.createElement('div'), {
@@ -74,9 +54,10 @@ const generateElements = (self, id, title, currentElapsed, active) => {
 
 const getDifference = start => {
 	let change = 0
-	let now = Date.now()
-	if(typeof start === 'number' && start < now)
-		change = Math.floor((now - start) / 1000)
+	let m1 = moment(start)
+	if(m1.isValid())
+		change = moment().diff(m1).asSeconds()
+	
 	return change
 }
 
@@ -94,6 +75,7 @@ class TaskUi
 		
 		this.elapsed = 0
 		this.lastStart = null
+		this.spanId = null
 		this.timer = null
 		
 		this.delay = options && typeof options.delay === 'number' ? options.delay : defaultDelay
@@ -114,7 +96,10 @@ class TaskUi
 	
 	start()
 	{
-		this.lastStart = Date.now()
+		this.lastStart = moment()
+		this.spanId = this.task.span.length + 1
+		
+		Sender.taskSpanNew(this.task.id, this.spanId, this.lastStart.format(timestampFormat))
 		
 		let self = this
 		this.timer = setInterval(() => {
@@ -142,7 +127,7 @@ class TaskUi
 		
 		toggleActive(this.elements, false)
 		
-		ipcRenderer.send('task-update', this.task)
+		Sender.taskSpanUpdate(this.task.id, this.spanId, moment().format(timestampFormat))
 		
 		return this
 	}
