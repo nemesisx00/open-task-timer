@@ -1,10 +1,11 @@
+/* global load */
 
+require('./init')
 const {app, ipcMain, Menu, BrowserWindow} = require('electron')
 const path = require('path')
-const json = require('../../package.json')
-const menuTemplate = require('./lib/MainMenu')
+const menuTemplate = load('MainMenu')
 
-const Task = require('./lib/Task')
+const Task = load('Task')
 
 global.activePath = null
 global.tasks = []
@@ -46,17 +47,17 @@ ipcMain.on('log', (event, arg) => {
 //Set up the main application window when the application is ready
 app.on('ready', () => {
 	var window = new BrowserWindow({
-		title: json.settings.title,
-		width: json.settings.width,
-		height: json.settings.height
+		width: 360,
+		height: 540,
 	})
 	
-	window.setMinimumSize(json.settings.minWidth, json.settings.minHeight)
+	window.setMinimumSize(360, 420)
 	
 	const menu = Menu.buildFromTemplate(menuTemplate)
 	Menu.setApplicationMenu(menu)
 	
-	window.loadURL('file://' + path.join(__dirname, '..', '..') + '/index.html')
+	window.loadURL('file://' + path.join(__dirname, 'index.html'))
+	window.webContents.openDevTools();
 	
 	window.on('closed', () => { window = null })
 })

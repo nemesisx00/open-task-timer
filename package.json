@@ -1,25 +1,68 @@
 {
-  "name": "OpenTaskTimer",
-  "version": "0.0.0",
-  "description": "Desktop application build with Electron",
-  "repository": "",
+  "name": "open-task-timer",
+  "productName": "Open Task Timer",
+  "version": "1.0.0",
+  "description": "Open Task Timer built with Electron",
+  "main": "src/index.js",
   "scripts": {
-    "postinstall": "install-app-deps"
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "eslint src --color"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Peter Lunneberg",
+    "email": "plunn.dev+opentasktimer@gmail.com"
+  },
+  "license": "MIT",
+  "config": {
+    "forge": {
+      "make_targets": {
+        "win32": [
+          "squirrel"
+        ],
+        "darwin": [
+          "zip"
+        ],
+        "linux": [
+          "deb",
+          "rpm"
+        ]
+      },
+      "electronPackagerConfig": {
+        "packageManager": "npm"
+      },
+      "electronWinstallerConfig": {
+        "name": "open_task_timer"
+      },
+      "electronInstallerDebian": {},
+      "electronInstallerRedhat": {},
+      "github_repository": {
+        "owner": "",
+        "name": ""
+      },
+      "windowsStoreConfig": {
+        "packageName": "",
+        "name": "opentasktimer"
+      }
+    }
+  },
+  "dependencies": {
+    "electron-compile": "^6.4.2",
+    "electron-squirrel-startup": "^1.0.0"
   },
   "devDependencies": {
-    "electron-builder": "19.48.2",
-    "electron": "1.7.9",
-    "gulp": "^3.9.1",
-    "mocha": "^4.0.1",
-    "spectron": "^3.7.2",
-    "webpack-stream": "^3.2.0"
-  },
-  "build": {
-    "appId": "us.plunn.opentasktimer",
-	"productName": "Open Task Timer",
-    "win": {},
-    "mac": {
-      "category": "public.app-category.productivity"
-    }
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "electron-forge": "^5.1.1",
+    "electron-prebuilt-compile": "1.8.2",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb": "^15.1.0",
+    "eslint-plugin-import": "^2.9.0",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-react": "^7.7.0"
   }
 }

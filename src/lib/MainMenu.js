@@ -1,7 +1,9 @@
 'use static'
 
+/* global load */
+
 const {BrowserWindow} = require('electron')
-const Data = require('./Data.js')
+const Data = load('Data.js')
 
 module.exports = [
 	{

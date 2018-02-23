@@ -1,9 +1,11 @@
 'use strict'
 
+/* global load */
+
 const fs = require('fs')
 const {BrowserWindow, dialog} = require('electron')
-const Task = require('./Task')
-const Util = require('./Util')
+const Task = load('Task')
+const Util = load('Util')
 
 const defaultOpenOptions = Object.freeze({
 	title: 'Open Tasks File',

@@ -1,6 +1,10 @@
+require('./init')
+
+/* global load */
+
 const {ipcRenderer} = require('electron')
 
-const TaskUi = require('./lib/TaskUi')
+const TaskUi = load('TaskUi')
 
 let ui = []
 
