@@ -10,12 +10,19 @@ module.exports = [
 		label: 'File',
 		submenu: [
 			{
+				label: 'New',
+				click () {
+					global.tasks = []
+					global.activePath = null
+					BrowserWindow.getFocusedWindow().webContents.send('tasks-clear')
+				}
+			},
+			{
 				label: 'Open',
 				click () {
-					let loaded = Data.loadTasksFromFile()
-					global.tasks = loaded.tasks
-					global.activePath = loaded.path
-					BrowserWindow.getFocusedWindow().webContents.send('tasks-opened', global.tasks)
+					let path = Data.loadTasksFromFile()
+					if(path)
+						global.activePath = path
 				}
 			},
 			{
@@ -27,7 +34,9 @@ module.exports = [
 			{
 				label: 'Save As...',
 				click () {
-					Data.saveTasksToFile(global.tasks)
+					let path = Data.saveTasksToFile(global.tasks)
+					if(path)
+						global.activePath = path
 				}
 			},
 			{ role: 'close' }

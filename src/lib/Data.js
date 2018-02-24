@@ -70,12 +70,11 @@ const writeData = (window, path, data, truncate) => {
 
 class Data
 {
+	/**
+	 * 
+	 */
 	static loadTasksFromFile(opts)
 	{
-		let out = {
-			tasks: [],
-			path: null
-		}
 		let window = BrowserWindow.getFocusedWindow()
 		let options = Util.deepMerge(defaultOpenOptions, opts)
 		let path = dialog.showOpenDialog(window, options)
@@ -83,10 +82,11 @@ class Data
 		if(path)
 		{
 			path = path[0]
-			out.path = path
 			fs.readFile(path, (err, data) => {
 				if (err)
 					throw err
+				
+				window.webContents.send('tasks-clear')
 				
 				let json = JSON.parse(data)
 				if(typeof json === 'object')
@@ -96,26 +96,20 @@ class Data
 						json.forEach(obj => {
 							let task = createTaskFromObj(obj)
 							if(task)
-							{
-								out.tasks.push(task)
 								window.webContents.send('task-created', task)
-							}
 						})
 					}
 					else
 					{
 						let task = createTaskFromObj(json)
 						if(task)
-						{
-							out.tasks.push(task)
 							window.webContents.send('task-created', task)
-						}
 					}
 				}
 			})
 		}
 		
-		return out
+		return path
 	}
 	
 	static saveTasksToFile(tasks, activePath)
@@ -127,7 +121,10 @@ class Data
 		if(!exists)
 			path = dialog.showSaveDialog(window, defaultSaveOptions)
 		
-		writeData(window, path, tasks, exists)
+		if(path)
+			writeData(window, path, tasks, exists)
+		
+		return path
 	}
 }
 

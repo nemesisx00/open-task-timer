@@ -127,7 +127,7 @@ class TaskUi
 		return this
 	}
 	
-	stop()
+	stop(skipUpdate)
 	{
 		if(this.timer != null)
 			clearInterval(this.timer)
@@ -142,7 +142,8 @@ class TaskUi
 		
 		toggleActive(this.elements, false)
 		
-		ipcRenderer.send('task-update', this.task)
+		if(!skipUpdate)
+			ipcRenderer.send('task-update', this.task)
 		
 		return this
 	}

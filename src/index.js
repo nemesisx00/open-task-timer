@@ -56,7 +56,7 @@ app.on('ready', () => {
 	const menu = Menu.buildFromTemplate(menuTemplate)
 	Menu.setApplicationMenu(menu)
 	
-	window.loadURL('file://' + path.join(__dirname, 'index.html'))
+	window.loadURL('file://' + path.join(__dirname, 'html', 'index.html'))
 	window.webContents.openDevTools();
 	
 	window.on('closed', () => { window = null })
