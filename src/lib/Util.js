@@ -58,6 +58,26 @@ class Util
 	}
 	
 	/**
+	 * Dispatch an event on an element.
+	 * @static
+	 * @param {string|Element} selector The element to which to add the class name.
+	 * @param {string|Event} eventName The event name, or instance of Event, to be dispatched on the element.
+	 */
+	static dispatch(selector, eventName)
+	{
+		let el = selector
+		if(Util.checkType(selector, 'string'))
+			el = document.querySelector(selector.trim())
+		
+		let evt = eventName
+		if(Util.checkType(evt, 'string'))
+			evt = new Event(eventName)
+		
+		if(el)
+			el.dispatchEvent(evt)
+	}
+	
+	/**
 	 * Add one or more class names to an element.
 	 * @static
 	 * @param {string|Element} selector The element to which to add the class name.
