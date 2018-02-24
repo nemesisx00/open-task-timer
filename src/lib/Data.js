@@ -3,7 +3,7 @@
 /* global load */
 
 const fs = require('fs')
-const {BrowserWindow, dialog} = require('electron')
+const {dialog} = require('electron')
 const Task = load('Task')
 const Util = load('Util')
 
@@ -40,7 +40,7 @@ const createTaskFromObj = obj => {
 	return task
 }
 
-const writeData = (window, path, data, truncate) => {
+const writeData = (path, data, truncate, browserWindow) => {
 	if(truncate)
 	{
 		fs.truncate(path, err1 => {
@@ -52,7 +52,8 @@ const writeData = (window, path, data, truncate) => {
 					throw err2
 				
 				global.activePath = path
-				window.webContents.send('task-saved', path)
+				if(browserWindow)
+					browserWindow.webContents.send('task-saved', path)
 			})
 		})
 	}
@@ -63,7 +64,8 @@ const writeData = (window, path, data, truncate) => {
 				throw err
 			
 			global.activePath = path
-			window.webContents.send('task-saved', path)
+			if(browserWindow)
+				browserWindow.webContents.send('task-saved', path)
 		})
 	}
 }
@@ -73,11 +75,10 @@ class Data
 	/**
 	 * 
 	 */
-	static loadTasksFromFile(opts)
+	static loadTasksFromFile(browserWindow, opts)
 	{
-		let window = BrowserWindow.getFocusedWindow()
 		let options = Util.deepMerge(defaultOpenOptions, opts)
-		let path = dialog.showOpenDialog(window, options)
+		let path = dialog.showOpenDialog(browserWindow, options)
 		
 		if(path)
 		{
@@ -86,7 +87,7 @@ class Data
 				if (err)
 					throw err
 				
-				window.webContents.send('tasks-clear')
+				browserWindow.webContents.send('tasks-clear')
 				
 				let json = JSON.parse(data)
 				if(typeof json === 'object')
@@ -96,14 +97,14 @@ class Data
 						json.forEach(obj => {
 							let task = createTaskFromObj(obj)
 							if(task)
-								window.webContents.send('task-created', task)
+								browserWindow.webContents.send('task-created', task)
 						})
 					}
 					else
 					{
 						let task = createTaskFromObj(json)
 						if(task)
-							window.webContents.send('task-created', task)
+							browserWindow.webContents.send('task-created', task)
 					}
 				}
 			})
@@ -112,17 +113,16 @@ class Data
 		return path
 	}
 	
-	static saveTasksToFile(tasks, activePath)
+	static saveTasksToFile(browserWindow, tasks, activePath)
 	{
-		let window = BrowserWindow.getFocusedWindow()
 		let path = activePath
 		
 		let exists = fs.existsSync(path)
-		if(!exists)
-			path = dialog.showSaveDialog(window, defaultSaveOptions)
+		if(!exists && browserWindow)
+			path = dialog.showSaveDialog(browserWindow, defaultSaveOptions)
 		
 		if(path)
-			writeData(window, path, tasks, exists)
+			writeData(path, tasks, exists, browserWindow)
 		
 		return path
 	}

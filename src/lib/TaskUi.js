@@ -137,15 +137,21 @@ class TaskUi
 		
 		this.timer = null
 		this.lastStart = null
-		this.task.duration += this.elapsed
-		this.elapsed = 0
+		
+		if(!skipUpdate)
+			this.saveTask()
 		
 		toggleActive(this.elements, false)
 		
-		if(!skipUpdate)
-			ipcRenderer.send('task-update', this.task)
-		
 		return this
+	}
+	
+	saveTask()
+	{
+		this.task.duration += this.elapsed
+		this.elapsed = 0
+		
+		ipcRenderer.send('task-update', this.task)
 	}
 	
 	toggleActive(active)

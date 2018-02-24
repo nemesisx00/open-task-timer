@@ -6,6 +6,14 @@ const {ipcRenderer} = require('electron')
 
 const TaskUi = load('TaskUi')
 
+//1 minute
+const defaultAutoSaveDelay = 60000
+
+const autoSave = () => {
+	ui.forEach(t => t.saveTask())
+	ipcRenderer.send('auto-save')
+}
+
 const renderTask = json => {
 	let taskUi = new TaskUi(json)
 	
@@ -16,6 +24,24 @@ const renderTask = json => {
 let ui = []
 
 let titleInput = document.getElementById('newLabel')
+let autoSaveTimer = setInterval(autoSave, defaultAutoSaveDelay)
+
+ipcRenderer.on('auto-save-start', (event, arg) => {
+	//Shouldn't happen but just make sure
+	if(autoSaveTimer)
+		clearInterval(autoSaveTimer)
+	
+	let delay = defaultAutoSaveDelay
+	if(arg && typeof arg === 'number' && arg > 0)
+		delay = arg
+	
+	autoSaveTimer = setInterval(autoSave, delay)
+})
+
+ipcRenderer.on('auto-save-stop', () => {
+	if(autoSaveTimer)
+		clearInterval(autoSaveTimer)
+})
 
 ipcRenderer.on('tasks-clear', () => {
 	ui.map(t => {

@@ -1,13 +1,15 @@
 /* global load */
 
 require('./init')
-const {app, ipcMain, Menu, BrowserWindow} = require('electron')
+const {app, dialog, ipcMain, Menu, BrowserWindow} = require('electron')
 const path = require('path')
 const menuTemplate = load('MainMenu')
 
+const Data = load('Data')
 const Task = load('Task')
 
 global.activePath = null
+global.mainWindow = null
 global.tasks = []
 
 //Create a new task instance
@@ -37,6 +39,11 @@ ipcMain.on('task-update', (event, arg) => {
 	}
 })
 
+ipcMain.on('auto-save', () => {
+	if(global.activePath)
+		Data.saveTasksToFile(global.mainWindow, global.tasks, global.activePath)
+})
+
 //Log messages from the browser context to the standard output
 ipcMain.on('log', (event, arg) => {
 	console.log('')
@@ -46,7 +53,7 @@ ipcMain.on('log', (event, arg) => {
 
 //Set up the main application window when the application is ready
 app.on('ready', () => {
-	var window = new BrowserWindow({
+	let window = new BrowserWindow({
 		width: 360,
 		height: 540,
 	})
@@ -59,7 +66,23 @@ app.on('ready', () => {
 	window.loadURL('file://' + path.join(__dirname, 'html', 'index.html'))
 	window.webContents.openDevTools();
 	
-	window.on('closed', () => { window = null })
+	window.on('close', (event) => {
+		//TODO: Update this to the standard "save and quit"|"quit without saving"|"cancel" options
+		let cancel = dialog.showMessageBox(global.mainWindow, {
+			type: 'question',
+			buttons: ['Yes', 'No'],
+			title: 'Quit',
+			message: 'Are you sure you want to quit?',
+			cancelId: 1
+		})
+		
+		if(cancel)
+			event.preventDefault()
+	})
+	
+	window.on('closed', () => { global.mainWindow = null })
+	
+	global.mainWindow = window
 })
 
 //Clean up the processes when the appliation is closed
