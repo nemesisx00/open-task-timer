@@ -17,26 +17,28 @@ Listener.initialize()
 
 document.addEventListener('DOMContentLoaded', () => {
 	document.getElementById('createNewEntry').addEventListener('click', taskCreateHandler)
-	document.getElementById('newLabel').addEventListener('change', toggleAddButton)
+	document.getElementById('newLabel').addEventListener('input', toggleAddButton)
 })
 
 // --------------------------------------------------
 
+let addButton = document.getElementById('createNewEntry')
 let titleInput = document.getElementById('newLabel')
 
 function taskCreateHandler()
 {
-	if(titleInput && typeof titleInput.value === 'string' && titleInput.value.length > 0
-		&& ![document.querySelectorAll('.task .title')].find(t => t.innerHTML === titleInput.value))
+	let value = titleInput.value
+	if(Util.checkType(value, 'string') && value.length > 0
+		&& ![document.querySelectorAll('.task .title')].find(t => t.innerHTML === value))
 	{
-		Sender.taskNew(titleInput.value)
+		Sender.taskNew(value)
 	}
 }
 
 function toggleAddButton()
 {
-	let active = titleInput && titleInput.value.length > 0
-	
-	if(active)
-		Util.toggleClassName(titleInput, 'active')
+	if(titleInput.value.length > 0)
+		Util.removeClassName(addButton, 'disabled')
+	else
+		Util.addClassName(addButton, 'disabled')
 }
