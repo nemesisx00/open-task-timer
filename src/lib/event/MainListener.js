@@ -4,10 +4,11 @@
 const {ipcMain} = require('electron')
 
 const Data = load('Data')
-const Events = load('event/BrowserEvents')
+const Events = load('event/MainEvents')
 const Sender = load('event/MainSender')
 const Task = load('task/Task')
 const TimeSpan = load('task/TimeSpan')
+const Util = load('Util')
 
 class MainListener
 {
@@ -45,7 +46,7 @@ function handleLog(event, arg)
  */
 function handleTaskNew(event, arg)
 {
-	if(arg && typeof arg.title === 'string' && !global.tasks.find(t => t.title === arg.title))
+	if(arg && Util.checkType(arg.title, 'string') && !global.tasks.find(t => t.title === arg.title))
 	{
 		let id = global.tasks.reduce((acc, val) => val.id > acc ? val.id : acc, 0) + 1
 		let task = new Task(id, arg.title)

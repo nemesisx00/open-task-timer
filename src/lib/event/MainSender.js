@@ -2,6 +2,7 @@
 /* global load */
 
 const Events = load('event/BrowserEvents')
+const Util = load('Util')
 
 class MainSender
 {
@@ -27,7 +28,7 @@ class MainSender
 	
 	static taskCreated(sender, task)
 	{
-		sender.send(Events.task.created, task.toJson())
+		sender.send(Events.task.created, Util.checkType(task, 'Task') ? task.toJson() : task)
 	}
 	
 	static taskSaved(sender, path)

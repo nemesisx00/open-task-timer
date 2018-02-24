@@ -6,6 +6,7 @@ const {ipcRenderer} = require('electron')
 const Events = load('event/BrowserEvents')
 const Sender = load('event/BrowserSender')
 const TaskUi = load('ui/TaskUi')
+const Util = load('Util')
 
 class BrowserListener
 {
@@ -71,6 +72,7 @@ function handleTaskCreated(event, arg)
 	{
 		renderTask(arg)
 		titleInput.value = ''
+		Util.dispatch(titleInput, 'input')
 	}
 }
 
