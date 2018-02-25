@@ -56,6 +56,27 @@ const generateElements = (self, id, title, currentElapsed, active) => {
 	}
 }
 
+const updateSpan = (task, id, times) => {
+	if(task && id && times)
+	{
+		if(!Array.isArray(task.spans))
+			task.spans = []
+		
+		let span = task.spans.find(s => s.id === id)
+		if(!span)
+		{
+			span = { id: id }
+			task.spans.push(span)
+		}
+		
+		if(times.start)
+			span.start = times.start
+		
+		if(times.end)
+			span.end = times.end
+	}
+}
+
 const getDifference = start => {
 	let change = 0
 	let m1 = moment(start)
@@ -63,6 +84,13 @@ const getDifference = start => {
 		change = moment().diff(m1, 'seconds')
 	
 	return change
+}
+
+const calculateTotalTime = task => {
+	return task.spans.reduce((acc, val) => {
+		let addition = val.end ? val.end.diff(val.start, 'seconds') : moment().diff(val.start, 'seconds')
+		return acc + addition
+	}, 0)
 }
 
 class TaskUi
@@ -73,7 +101,7 @@ class TaskUi
 		
 		this.elapsed = 0
 		this.lastStart = null
-		this.spanId = null
+		this.currentSpanId = null
 		this.timer = null
 		
 		this.delay = options && typeof options.delay === 'number' ? options.delay : defaultDelay
@@ -95,9 +123,10 @@ class TaskUi
 	start()
 	{
 		this.lastStart = moment()
-		this.spanId = this.task.spans.length + 1
+		this.currentSpanId = this.task.spans.length + 1
 		
-		Sender.taskSpanNew(this.task.id, this.spanId, this.lastStart.format(timestampFormat))
+		updateSpan(this.task, this.currentSpanId, { start: this.lastStart })
+		Sender.taskSpanNew(this.task.id, this.currentSpanId, this.lastStart.format(timestampFormat))
 		
 		let self = this
 		this.timer = setInterval(() => {
@@ -122,7 +151,9 @@ class TaskUi
 		this.lastStart = null
 		this.toggleActive()
 		
-		Sender.taskSpanUpdate(this.task.id, this.spanId, moment().format(timestampFormat))
+		let end = moment()
+		updateSpan(this.task, this.currentSpanId, { end: end })
+		Sender.taskSpanUpdate(this.task.id, this.currentSpanId, end.format(timestampFormat))
 		
 		return this
 	}
@@ -132,7 +163,7 @@ class TaskUi
 	 */
 	autoSaveTask()
 	{
-		Sender.taskSpanUpdate(this.task.id, this.spanId, moment().format(timestampFormat))
+		Sender.taskSpanUpdate(this.task.id, this.currentSpanId, moment().format(timestampFormat))
 	}
 	
 	toggleActive()
@@ -157,7 +188,7 @@ class TaskUi
 		}
 		
 		if(this.elements.elapsed != null)
-			this.elements.elapsed.innerHTML = this.formatter(this.task.duration + this.elapsed)
+			this.elements.elapsed.innerHTML = this.formatter(calculateTotalTime(this.task))
 	}
 }
 
