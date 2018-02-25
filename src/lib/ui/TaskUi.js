@@ -5,11 +5,14 @@ const moment = require('moment')
 require('moment-duration-format')
 
 const Sender = load('event/BrowserSender')
+const Util = load('Util')
 
 const timestampFormat = 'Y-MM-DD hh:mm:ss'
-const timeFormat = 'h:mm:ss'
+const timeFormat = 'y [years] d [days] hh:mm:ss'
 const timeOptions = {
-	useGrouping: false
+	forceLength: true,
+	useGrouping: false,
+	stopTrim: 'h'
 }
 
 const defaultDelay = 1000
@@ -57,15 +60,9 @@ const getDifference = start => {
 	let change = 0
 	let m1 = moment(start)
 	if(m1.isValid())
-		change = moment().diff(m1).asSeconds()
+		change = moment().diff(m1, 'seconds')
 	
 	return change
-}
-
-const toggleActive = (elements, isActive) => {
-	elements.button.className = elements.button.className.replace('active').trim()
-	if(isActive)
-		elements.button.className += ' active'
 }
 
 class TaskUi
@@ -98,7 +95,7 @@ class TaskUi
 	start()
 	{
 		this.lastStart = moment()
-		this.spanId = this.task.span.length + 1
+		this.spanId = this.task.spans.length + 1
 		
 		Sender.taskSpanNew(this.task.id, this.spanId, this.lastStart.format(timestampFormat))
 		
@@ -108,12 +105,12 @@ class TaskUi
 			self.updateDisplay()
 		}, this.delay)
 		
-		toggleActive(this.elements, true)
+		this.toggleActive()
 		
 		return this
 	}
 	
-	stop(skipUpdate)
+	stop()
 	{
 		if(this.timer != null)
 			clearInterval(this.timer)
@@ -123,24 +120,22 @@ class TaskUi
 		
 		this.timer = null
 		this.lastStart = null
-		
-		if(!skipUpdate)
-			this.saveTask()
+		this.toggleActive()
 		
 		Sender.taskSpanUpdate(this.task.id, this.spanId, moment().format(timestampFormat))
 		
 		return this
 	}
 	
-	saveTask()
+	/**
+	 * Update the task's current TimeSpan on the backend without stopping the timer.
+	 */
+	autoSaveTask()
 	{
-		this.task.duration += this.elapsed
-		this.elapsed = 0
-		
-		//ipcRenderer.send('task-update', this.task)
+		Sender.taskSpanUpdate(this.task.id, this.spanId, moment().format(timestampFormat))
 	}
 	
-	toggleActive(active)
+	toggleActive()
 	{
 		if(this.elements.button == null && this.elements.main != null)
 		{
@@ -149,12 +144,7 @@ class TaskUi
 				this.elements.button = el
 		}
 		
-		if(this.elements.button != null)
-		{
-			this.elements.button.className = this.elements.button.className.replace('active').trim()
-			if(active)
-				this.elements.button.className += ' active'
-		}
+		Util.toggleClassName(this.elements.button, 'active')
 	}
 	
 	updateDisplay()

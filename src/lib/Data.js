@@ -74,6 +74,7 @@ class Data
 				if (err)
 					throw err
 				
+				global.tasks = []
 				Sender.tasksClear(browserWindow.webContents)
 				
 				let json = JSON.parse(data)
@@ -84,14 +85,20 @@ class Data
 						json.forEach(obj => {
 							let task = Task.fromJson(obj)
 							if(task)
+							{
+								global.tasks.push(task)
 								Sender.taskCreated(browserWindow.webContents, task)
+							}
 						})
 					}
 					else
 					{
 						let task = Task.fromJson(json)
 						if(task)
+						{
+							global.tasks.push(task)
 							Sender.taskCreated(browserWindow.webContents, task)
+						}
 					}
 				}
 			})

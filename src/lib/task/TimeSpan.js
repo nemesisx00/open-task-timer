@@ -36,8 +36,11 @@ class TimeSpan
 		let out = null
 		if(typeof json === 'object')
 		{
-			out = new TimeSpan(json.id, json.start)
-			out.end = json.end
+			let start = json._start ? json._start : json.start
+			let end = json._end ? json._end : json.end
+			
+			out = new TimeSpan(json.id, start)
+			out.end = end
 		}
 		
 		return out
@@ -73,7 +76,7 @@ class TimeSpan
 	 * Get the duration in seconds.
 	 * @return {integer} Returns the duration in seconds.
 	 */
-	get seconds() { return this.end.diff(this.start).asSeconds() }
+	get seconds() { return this.end.diff(this.start, 'seconds') }
 	
 	/**
 	 * Set the start timestamp.
@@ -87,7 +90,7 @@ class TimeSpan
 	 */
 	set end(end)
 	{
-		let m = momentize(this._end)
+		let m = momentize(end)
 		this._end = m ? m.format(timestampFormat) : null
 	}
 	

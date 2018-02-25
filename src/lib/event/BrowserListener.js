@@ -59,7 +59,8 @@ function handleAutoSaved(event, arg)
 function handleTasksClear()
 {
 	global.taskUis.map(t => {
-		t.stop(true)
+		if(t.timer)
+			clearInterval(t.timer)
 		t.elements.main.remove()
 	})
 	
@@ -85,13 +86,15 @@ function handleTaskOpened(event, arg)
 function handleTaskSpanCreated(event, arg)
 {
 	//Inform the user whether or not it succeeded
-	Sender.log(`TimeSpan created: ${arg}`)
+	let success = arg && arg.success
+	success
 }
 
 function handleTaskSpanUpdated(event, arg)
 {
 	//Inform the user whether or not it succeeded
-	Sender.log(`TimeSpan updated: ${arg}`)
+	let success = arg && arg.success
+	success
 }
 
 function renderTask(obj)

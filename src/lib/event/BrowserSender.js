@@ -7,10 +7,14 @@ const Events = load('event/MainEvents')
 
 class BrowserSender
 {
-	static autoSave()
+	static autoSave(force)
 	{
-		global.taskUis.forEach(t => t.saveTask())
-		ipcRenderer.send(Events.auto.save)
+		//Only do the save if there's actually something to preserve
+		if(force || global.taskUis.find(t => t.timer !== null))
+		{
+			global.taskUis.forEach(t => t.autoSaveTask())
+			ipcRenderer.send(Events.auto.save)
+		}
 	}
 	
 	static log(msg)

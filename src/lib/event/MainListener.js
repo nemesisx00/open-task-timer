@@ -59,14 +59,17 @@ function handleTaskNew(event, arg)
 function handleTaskSpanNew(event, arg)
 {
 	let success = false
-	if(arg && arg.taskId && typeof arg.span === 'object')
+	if(arg && arg.taskId)
 	{
 		let task = global.tasks.find(t => t.id === arg.taskId)
 		if(task instanceof Task)
 		{
-			let span = TimeSpan.fromJson(arg.span)
-			if(span instanceof TimeSpan)
-				success = task.addSpan(span)
+			if(!task.spans.find(s => s.id === arg.spanId))
+			{
+				let span = new TimeSpan(arg.spanId, arg.start)
+				if(span instanceof TimeSpan)
+					success = task.addSpan(span)
+			}
 		}
 	}
 	

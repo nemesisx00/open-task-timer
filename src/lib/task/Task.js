@@ -40,7 +40,7 @@ class Task
 	
 	get duration()
 	{
-		return this.spans.reduce((acc, val) => acc + val.seconds(), 0)
+		return this.spans.reduce((acc, val) => acc + val.seconds, 0)
 	}
 	
 	toJson()
