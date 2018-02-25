@@ -2,6 +2,7 @@
 /* global load */
 
 const {dialog} = require('electron')
+const opn = require('opn')
 
 const Data = load('Data.js')
 const Sender = load('event/MainSender')
@@ -71,7 +72,7 @@ module.exports = [
 		]
 	},
 	{
-		label: 'Edit',
+		label: 'Settings',
 		submenu: [
 			{
 				label: 'Auto Save',
@@ -83,7 +84,8 @@ module.exports = [
 					else
 						Sender.autoSaveStop(global.mainWindow.webContents)
 				}
-			}
+			},
+			{ role: 'toggledevtools' }
 		]
 	},
 	{
@@ -92,19 +94,55 @@ module.exports = [
 			{
 				label: 'About Open Task Timer',
 				click () {
-					//Show a dialog describing the application, links to the repo, etc...
+					dialog.showMessageBox(global.mainWindow, {
+						type: 'info',
+						buttons: ['Ok'],
+						title: 'About Open Task Timer',
+						message: 'Open Task Timer is an open source desktop application for effortlessly recording time spent doing all the things.'
+					})
 				}
 			},
 			{
 				label: 'License',
 				click () {
-					//Show a dialog displaying license
+					dialog.showMessageBox(global.mainWindow, {
+						type: 'info',
+						button: ['Ok'],
+						title: 'MIT License',
+						message: `The MIT License (MIT)
+
+Copyright (c) Peter Lunneberg 2017
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.`
+					})
 				}
 			},
 			{
 				label: 'Source Code Repository',
 				click () {
-					//Open the bitbucket repo link in the user's default browser
+					opn('https://bitbucket.org/nemesisx00/open-task-timer')
+				}
+			},
+			{
+				label: 'Issue Tracker',
+				click () {
+					opn('https://bitbucket.org/nemesisx00/open-task-timer/issues')
 				}
 			}
 		]

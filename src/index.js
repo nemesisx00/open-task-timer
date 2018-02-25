@@ -5,7 +5,7 @@ require('./init')
 
 const {app, dialog, Menu, BrowserWindow} = require('electron')
 const path = require('path')
-const menuTemplate = load('MainMenu')
+const menuTemplate = load('ui/MainMenu')
 
 const Listener = load('event/MainListener')
 
@@ -29,7 +29,6 @@ app.on('ready', () => {
 	Menu.setApplicationMenu(menu)
 	
 	window.loadURL('file://' + path.join(__dirname, 'html', 'index.html'))
-	window.webContents.openDevTools();
 	
 	window.on('close', (event) => {
 		//TODO: Update this to the standard "save and quit"|"quit without saving"|"cancel" options
