@@ -1,13 +1,12 @@
 'use strict'
-/* global load */
 
 const {ipcMain} = require('electron')
 
 const Data = load('Data')
 const Events = load('event/MainEvents')
 const Sender = load('event/MainSender')
-const Task = load('task/Task')
-const TimeSpan = load('task/TimeSpan')
+const Task = load('model/Task')
+const TimeSpan = load('model/TimeSpan')
 const Util = load('Util')
 
 class MainListener
@@ -52,46 +51,34 @@ function handleTaskNew(event, arg)
 		let task = new Task(id, arg.title)
 		
 		global.tasks.push(task)
-		Sender.taskCreated(event.sender, task)
+		Sender.taskCreated(event.sender, task.id)
 	}
 }
 
 function handleTaskSpanNew(event, arg)
 {
-	let success = false
-	if(arg && arg.taskId)
+	if(arg && arg.taskId && arg.spanId && arg.start)
 	{
 		let task = global.tasks.find(t => t.id === arg.taskId)
-		if(task instanceof Task)
+		if(task && !task.spans.find(s => s.id === arg.spanId))
 		{
-			if(!task.spans.find(s => s.id === arg.spanId))
-			{
-				let span = new TimeSpan(arg.spanId, arg.start)
-				if(span instanceof TimeSpan)
-					success = task.addSpan(span)
-			}
+			let span = new TimeSpan(arg.spanId, arg.start)
+			if(span instanceof TimeSpan)
+				task.addSpan(span)
 		}
 	}
-	
-	Sender.taskSpanCreated(event.sender, success)
 }
 
 function handleTaskSpanUpdate(event, arg)
 {
-	let success = false
 	if(arg && arg.taskId && arg.spanId && arg.end)
 	{
 		let task = global.tasks.find(t => t.id === arg.taskId)
-		if(task instanceof Task)
+		if(task)
 		{
 			let span = task.spans.find(s => s.id === arg.spanId)
-			if(span instanceof TimeSpan)
-			{
+			if(span)
 				span.end = arg.end
-				success = true
-			}
 		}
 	}
-	
-	Sender.taskSpanUpdated(event.sender, success)
 }

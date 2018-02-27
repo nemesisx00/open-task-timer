@@ -1,11 +1,10 @@
 'use strict'
-/* global load */
 
 const fs = require('fs')
 const {dialog} = require('electron')
 
 const Sender = load('event/MainSender')
-const Task = load('task/Task')
+const Task = load('model/Task')
 const Util = load('Util')
 
 const defaultOpenOptions = Object.freeze({
@@ -27,7 +26,7 @@ const defaultSaveOptions = Object.freeze({
 	]
 })
 
-const writeData = (path, data, truncate, browserWindow) => {
+const writeData = (path, data, truncate) => {
 	if(truncate)
 	{
 		fs.truncate(path, err1 => {
@@ -39,8 +38,6 @@ const writeData = (path, data, truncate, browserWindow) => {
 					throw err2
 				
 				global.activePath = path
-				if(browserWindow)
-					Sender.taskSaved(browserWindow.webContents, path)
 			})
 		})
 	}
@@ -51,8 +48,6 @@ const writeData = (path, data, truncate, browserWindow) => {
 				throw err
 			
 			global.activePath = path
-			if(browserWindow)
-				Sender.taskSaved(browserWindow.webContents, path)
 		})
 	}
 }
@@ -87,7 +82,7 @@ class Data
 							if(task)
 							{
 								global.tasks.push(task)
-								Sender.taskCreated(browserWindow.webContents, task)
+								Sender.taskCreated(browserWindow.webContents, task.id)
 							}
 						})
 					}
@@ -97,7 +92,7 @@ class Data
 						if(task)
 						{
 							global.tasks.push(task)
-							Sender.taskCreated(browserWindow.webContents, task)
+							Sender.taskCreated(browserWindow.webContents, task.id)
 						}
 					}
 				}
@@ -116,7 +111,7 @@ class Data
 			path = dialog.showSaveDialog(browserWindow, defaultSaveOptions)
 		
 		if(path)
-			writeData(path, tasks, exists, browserWindow)
+			writeData(path, tasks, exists)
 		
 		return path
 	}

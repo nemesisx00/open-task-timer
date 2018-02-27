@@ -1,5 +1,4 @@
 'use strict'
-/* global load */
 
 const {ipcRenderer} = require('electron')
 

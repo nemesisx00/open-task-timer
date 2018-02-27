@@ -1,8 +1,8 @@
 'use strict'
-/* global load */
 
 const moment = require('moment')
 require('moment-duration-format')
+const {getGlobal} = require('electron').remote
 
 const Sender = load('event/BrowserSender')
 const Util = load('Util')
@@ -34,7 +34,7 @@ const generateElements = (self, id, title, currentElapsed, active) => {
 	})
 	
 	button.addEventListener('click', () => {
-		if(!self.isActive())
+		if(!self.active)
 			self.start()
 		else
 			self.stop()
@@ -56,48 +56,11 @@ const generateElements = (self, id, title, currentElapsed, active) => {
 	}
 }
 
-const updateSpan = (task, id, times) => {
-	if(task && id && times)
-	{
-		if(!Array.isArray(task.spans))
-			task.spans = []
-		
-		let span = task.spans.find(s => s.id === id)
-		if(!span)
-		{
-			span = { id: id }
-			task.spans.push(span)
-		}
-		
-		if(times.start)
-			span.start = times.start
-		
-		if(times.end)
-			span.end = times.end
-	}
-}
-
-const getDifference = start => {
-	let change = 0
-	let m1 = moment(start)
-	if(m1.isValid())
-		change = moment().diff(m1, 'seconds')
-	
-	return change
-}
-
-const calculateTotalTime = task => {
-	return task.spans.reduce((acc, val) => {
-		let addition = val.end ? val.end.diff(val.start, 'seconds') : moment().diff(val.start, 'seconds')
-		return acc + addition
-	}, 0)
-}
-
 class TaskUi
 {
-	constructor(task, options)
+	constructor(taskId, options)
 	{
-		this.task = task
+		this.taskId = taskId
 		
 		this.elapsed = 0
 		this.lastStart = null
@@ -107,33 +70,24 @@ class TaskUi
 		this.delay = options && typeof options.delay === 'number' ? options.delay : defaultDelay
 		this.formatter = options && typeof options.formatter === 'function' ? options.formatter : defaultFormatter
 		
-		this.elements = generateElements(this, `task-${this.task.id}`, this.task.title, this.formatter(this.task.duration), false)
+		let task = getGlobal('tasks').find(t => t.id === this.taskId)
+		this.elements = generateElements(this, `task-${task.id}`, task.title, this.formatter(task.duration), false)
 	}
 	
 	append()
 	{
-		document.getElementById('container').append(this.elements.main)
+		if(!document.getElementById(`task-${this.taskId}`))
+			document.getElementById('container').append(this.elements.main)
 	}
 	
-	isActive()
-	{
-		return this.timer != null
-	}
+	get active() { return this.timer != null }
 	
 	start()
 	{
-		this.lastStart = moment()
-		this.currentSpanId = this.task.spans.length + 1
-		
-		updateSpan(this.task, this.currentSpanId, { start: this.lastStart })
-		Sender.taskSpanNew(this.task.id, this.currentSpanId, this.lastStart.format(timestampFormat))
-		
-		let self = this
-		this.timer = setInterval(() => {
-			self.elapsed = getDifference(self.lastStart)
-			self.updateDisplay()
-		}, this.delay)
-		
+		let task = getGlobal('tasks').find(t => t.id === this.taskId)
+		this.currentSpanId = task.spans.length + 1
+		Sender.taskSpanNew(this.taskId, this.currentSpanId, moment().format(timestampFormat))
+		this.timer = setInterval(() => this.updateDisplay(), this.delay)
 		this.toggleActive()
 		
 		return this
@@ -144,16 +98,10 @@ class TaskUi
 		if(this.timer != null)
 			clearInterval(this.timer)
 		
-		//Do one final update, just in case
-		this.updateDisplay()
-		
 		this.timer = null
-		this.lastStart = null
 		this.toggleActive()
-		
-		let end = moment()
-		updateSpan(this.task, this.currentSpanId, { end: end })
-		Sender.taskSpanUpdate(this.task.id, this.currentSpanId, end.format(timestampFormat))
+		Sender.taskSpanUpdate(this.taskId, this.currentSpanId, moment().format(timestampFormat))
+		this.updateDisplay()
 		
 		return this
 	}
@@ -163,7 +111,9 @@ class TaskUi
 	 */
 	autoSaveTask()
 	{
-		Sender.taskSpanUpdate(this.task.id, this.currentSpanId, moment().format(timestampFormat))
+		let task = getGlobal('tasks').find(t => t.id === this.taskId)
+		let span = task.spans.find(s => s.id === this.currentSpanId)
+		span._end = moment()
 	}
 	
 	toggleActive()
@@ -188,7 +138,10 @@ class TaskUi
 		}
 		
 		if(this.elements.elapsed != null)
-			this.elements.elapsed.innerHTML = this.formatter(calculateTotalTime(this.task))
+		{
+			let task = getGlobal('tasks').find(t => t.id === this.taskId)
+			this.elements.elapsed.innerHTML = this.formatter(task.duration)
+		}
 	}
 }
 

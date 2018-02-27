@@ -1,5 +1,4 @@
 'use static'
-/* global load */
 
 const {dialog} = require('electron')
 const opn = require('opn')

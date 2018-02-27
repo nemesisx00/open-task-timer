@@ -1,5 +1,4 @@
 'use strict'
-/* global load */
 
 const {ipcRenderer} = require('electron')
 
@@ -15,11 +14,8 @@ class BrowserListener
 		ipcRenderer.on(Events.auto.save.start, handleAutoSaveStart)
 		ipcRenderer.on(Events.auto.save.stop, handleAutoSaveStop)
 		ipcRenderer.on(Events.auto.saved, handleAutoSaved)
-		ipcRenderer.on(Events.task.clear, handleTasksClear)
+		ipcRenderer.on(Events.state.clear, handleTasksClear)
 		ipcRenderer.on(Events.task.created, handleTaskCreated)
-		ipcRenderer.on(Events.task.opened, handleTaskOpened)
-		ipcRenderer.on(Events.task.span.created, handleTaskSpanCreated)
-		ipcRenderer.on(Events.task.span.updated, handleTaskSpanUpdated)
 	}
 }
 
@@ -69,32 +65,12 @@ function handleTasksClear()
 
 function handleTaskCreated(event, arg)
 {
-	if(arg && arg.id > 0 && typeof arg.title === 'string' && typeof arg.duration === 'number')
+	if(arg && arg > 0)
 	{
 		renderTask(arg)
 		titleInput.value = ''
 		Util.dispatch(titleInput, 'input')
 	}
-}
-
-function handleTaskOpened(event, arg)
-{
-	//Inform the user whether or not it succeeded
-	Sender.log(arg)
-}
-
-function handleTaskSpanCreated(event, arg)
-{
-	//Inform the user whether or not it succeeded
-	let success = arg && arg.success
-	success
-}
-
-function handleTaskSpanUpdated(event, arg)
-{
-	//Inform the user whether or not it succeeded
-	let success = arg && arg.success
-	success
 }
 
 function renderTask(obj)

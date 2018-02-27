@@ -1,7 +1,6 @@
 'use strict'
-/* global load */
 
-const TimeSpan = load('task/TimeSpan')
+const TimeSpan = load('model/TimeSpan')
 
 class Task
 {
@@ -38,10 +37,7 @@ class Task
 		return out
 	}
 	
-	get duration()
-	{
-		return this.spans.reduce((acc, val) => acc + val.seconds, 0)
-	}
+	get duration() { return this.spans.reduce((acc, val) => acc + val.seconds, 0) }
 	
 	toJson()
 	{

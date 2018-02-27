@@ -8,14 +8,10 @@ module.exports = Object.freeze({
 		}),
 		saved: 'auto-saved'
 	}),
+	state: Object.freeze({
+		clear: 'tasks-clear'
+	}),
 	task: Object.freeze({
-		clear: 'tasks-clear',
-		created: 'task-created',
-		opened: 'tasks-opened',
-		saved: 'task-saved',
-		span: Object.freeze({
-			created: 'task-span-created',
-			updated: 'task-span-updated'
-		})
+		created: 'task-created'
 	})
 })
