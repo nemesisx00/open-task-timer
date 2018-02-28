@@ -4,7 +4,7 @@
 
 ## Releases
 
-Find releases here [https://bitbucket.org/nemesisx00/open-task-timer/downloads/](https://bitbucket.org/nemesisx00/open-task-timer/downloads/).
+Find releases on the [Downloads page](https://bitbucket.org/nemesisx00/open-task-timer/downloads/).
 
 ## Getting Started
 
