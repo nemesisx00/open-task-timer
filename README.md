@@ -25,7 +25,7 @@ Now you're ready to run the tests, start the application, package it, or build t
 npm test
 npm start
 npm run package
-npm run publish
+npm run make
 ```
 
 ## License
