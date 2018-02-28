@@ -7,7 +7,7 @@ const {getGlobal} = require('electron').remote
 const Sender = load('event/BrowserSender')
 const Util = load('Util')
 
-const timestampFormat = 'Y-MM-DD hh:mm:ss'
+const timestampFormat = 'Y-MM-DD HH:mm:ss'
 const timeFormat = 'y [years] d [days] hh:mm:ss'
 const timeOptions = {
 	forceLength: true,

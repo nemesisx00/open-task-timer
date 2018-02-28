@@ -5,7 +5,7 @@ require('moment-precise-range-plugin')
 require('moment-duration-format')
 
 const timeFormat = 'h:mm:ss'
-const timestampFormat = 'Y-MM-DD hh:mm:ss'
+const timestampFormat = 'Y-MM-DD HH:mm:ss'
 
 const timeOptions = {
 	useGrouping: false
@@ -15,7 +15,9 @@ const timeOptions = {
  * Translate val into a Moment.
  * @param {string|Moment} val The value to momentize.
  * @param {boolean} def Flag denoting whether or not to default to now if val is invalid.
- * @return {Moment|null} If the moment is invalid and def is true, returns null. Otherwise, returns an instance of Moment.
+ * @return {Moment|null} Returns the given timestamp as an instance of Moment.
+ *	If the moment is invalid and def evaluates to true, returns an instance of Moment representing NOW.
+ *	Otherwise, returns null.
  */
 function momentize(val, def)
 {
