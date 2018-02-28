@@ -2,23 +2,30 @@
 
 > An open source desktop application for effortlessly recording time spent doing all the things.
 
+## Releases
 
-## Dev
+Find releases here [https://bitbucket.org/nemesisx00/open-task-timer/downloads/](https://bitbucket.org/nemesisx00/open-task-timer/downloads/).
 
+## Getting Started
+
+Diving into development on Open Task Timer is rather straight forward thanks to the use of Electron Forge.
+
+So, first thing's first, install the Electron Forge command line tools:
 ```
-$ npm install
+npm install -g electron-forge
 ```
 
-### Run
-
+Next, make sure you have the project dependencies installed:
 ```
-$ npm start
+npm install
 ```
 
-### Package
-
+Now you're ready to run the tests, start the application, package it, or build the installer(s):
 ```
-$ npm package
+npm test
+npm start
+npm run package
+npm run publish
 ```
 
 ## License
