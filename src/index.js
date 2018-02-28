@@ -6,10 +6,13 @@ const {app, dialog, Menu, BrowserWindow} = require('electron')
 const path = require('path')
 const menuTemplate = load('ui/MainMenu')
 
+const Data = load('Data')
 const Listener = load('event/MainListener')
+const State = load('State')
 
 global.activePath = null
 global.mainWindow = null
+global.state = new State()
 global.tasks = []
 
 //Set up IPC event listeners
@@ -30,17 +33,27 @@ app.on('ready', () => {
 	window.loadURL('file://' + path.join(__dirname, 'html', 'index.html'))
 	
 	window.on('close', (event) => {
-		//TODO: Update this to the standard "save and quit"|"quit without saving"|"cancel" options
-		let cancel = dialog.showMessageBox(global.mainWindow, {
-			type: 'question',
-			buttons: ['Yes', 'No'],
-			title: 'Quit',
-			message: 'Are you sure you want to quit?',
-			cancelId: 1
-		})
-		
-		if(cancel)
-			event.preventDefault()
+		if(global.state.needsToSave)
+		{
+			let choice = dialog.showMessageBox(global.mainWindow, {
+				type: 'question',
+				buttons: ['Quit without Saving', 'Save and Quit', 'Cancel'],
+				title: 'Quit',
+				message: 'Are you sure you want to quit?',
+				cancelId: 2
+			})
+			
+			if(choice)
+			{
+				event.preventDefault()
+				if(choice === 1)
+				{
+					new Promise(resolve => {
+						resolve(Data.saveTasksToFile(global.mainWindow, global.tasks, global.activePath, true))
+					}).then(global.mainWindow.destroy())
+				}
+			}
+		}
 	})
 	
 	window.on('closed', () => { global.mainWindow = null })
@@ -49,4 +62,7 @@ app.on('ready', () => {
 })
 
 //Clean up the processes when the appliation is closed
-app.on('window-all-closed', () => app.quit())
+app.on('window-all-closed', () => {
+	if(process.platform != 'darwin')
+		app.quit()
+})

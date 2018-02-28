@@ -27,7 +27,7 @@ module.exports = MainListener
 
 function handleAutoSave()
 {
-	if(global.activePath)
+	if(global.activePath && global.state.needsToSave)
 		Data.saveTasksToFile(global.mainWindow, global.tasks, global.activePath)
 }
 
@@ -51,6 +51,7 @@ function handleTaskNew(event, arg)
 		let task = new Task(id, arg.title)
 		
 		global.tasks.push(task)
+		global.state.needsToSave = true
 		Sender.taskCreated(event.sender, task.id)
 	}
 }
@@ -63,8 +64,11 @@ function handleTaskSpanNew(event, arg)
 		if(task && !task.spans.find(s => s.id === arg.spanId))
 		{
 			let span = new TimeSpan(arg.spanId, arg.start)
-			if(span instanceof TimeSpan)
+			if(span)
+			{
 				task.addSpan(span)
+				global.state.needsToSave = true
+			}
 		}
 	}
 }
@@ -78,7 +82,10 @@ function handleTaskSpanUpdate(event, arg)
 		{
 			let span = task.spans.find(s => s.id === arg.spanId)
 			if(span)
+			{
 				span.end = arg.end
+				global.state.needsToSave = true
+			}
 		}
 	}
 }

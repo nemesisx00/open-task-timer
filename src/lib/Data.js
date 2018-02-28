@@ -37,6 +37,7 @@ const writeData = (path, data, truncate) => {
 				if(err2)
 					throw err2
 				
+				global.state.needsToSave = false
 				global.activePath = path
 			})
 		})
@@ -46,10 +47,18 @@ const writeData = (path, data, truncate) => {
 		fs.writeFile(path, JSON.stringify(data), err => {
 			if(err)
 				throw err
-			
+				
+			global.state.needsToSave = false
 			global.activePath = path
 		})
 	}
+}
+
+const writeDataSync = (path, data, truncate) => {
+	if(truncate)
+		fs.truncateSync(path)
+	fs.writeFileSync(path, JSON.stringify(data))
+	global.state.needsToSave = false
 }
 
 class Data
@@ -102,7 +111,7 @@ class Data
 		return path
 	}
 	
-	static saveTasksToFile(browserWindow, tasks, activePath)
+	static saveTasksToFile(browserWindow, tasks, activePath, synchronous)
 	{
 		let path = activePath
 		
@@ -111,7 +120,12 @@ class Data
 			path = dialog.showSaveDialog(browserWindow, defaultSaveOptions)
 		
 		if(path)
-			writeData(path, tasks, exists)
+		{
+			if(synchronous)
+				writeDataSync(path, tasks, exists)
+			else
+				writeData(path, tasks, exists)
+		}
 		
 		return path
 	}
