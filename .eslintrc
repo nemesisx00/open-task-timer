@@ -10,11 +10,12 @@
       "sourceType": "module"
   },
   "rules": {
-    "import/extensions": 0,
-    "import/no-extraneous-dependencies": 0,
-    "linebreak-style": 0,
-    "no-console": 0,
-    "no-unexpected-multiline": 0,
-    "no-undef": 0
+    "import/extensions": [ "off" ],
+    "import/no-extraneous-dependencies": [ "off" ],
+    "indent": [ "error", "tab", { "SwitchCase": 1 } ],
+    "linebreak-style": [ "off" ],
+    "no-console": [ "off" ],
+    "no-unexpected-multiline": [ "off" ],
+    "no-undef": [ "off" ]
   }
 }
