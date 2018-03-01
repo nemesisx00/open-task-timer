@@ -4,7 +4,9 @@
 
 ## Releases
 
-Find the most recent installers on the [Downloads page](https://bitbucket.org/nemesisx00/open-task-timer/downloads/).
+* [1.0.0-BETA Windows 64-bit](https://bitbucket.org/nemesisx00/open-task-timer/downloads/Open%20Task%20Timer-1.0.0-BETA%20Setup.exe)
+
+Find other versions on the [Downloads page](https://bitbucket.org/nemesisx00/open-task-timer/downloads/).
 
 ## Getting Started
 
@@ -30,10 +32,10 @@ npm run make
 
 ## License
 
-The MIT License (MIT) Â© Peter Lunneberg 2017
+The MIT License (MIT) © Peter Lunneberg 2017
 
 ## Third Party Resources
 
-* Electron â€” [https://electronjs.org/](https://electronjs.org/)
+* Electron — [https://electronjs.org/](https://electronjs.org/)
 * Electron Forge - [https://electronforge.io/](https://electronforge.io/)
-* Open Iconic â€” [https://useiconic.com/open](https://useiconic.com/open)
+* Open Iconic — [https://useiconic.com/open](https://useiconic.com/open)
