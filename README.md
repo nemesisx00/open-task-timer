@@ -8,6 +8,11 @@
 
 Find other versions on the [Downloads page](https://bitbucket.org/nemesisx00/open-task-timer/downloads/).
 
+## Prerequisites
+
+You'll need Node.js version 9.6.1 or newer and npm version 5.6.0 or newer.
+It's possible the project might work on earlier versions but attempt it at your own risk.
+
 ## Getting Started
 
 Diving into development on Open Task Timer is rather straight forward thanks to the use of Electron Forge.
