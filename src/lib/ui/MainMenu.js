@@ -8,7 +8,7 @@ const Sender = load('event/MainSender')
 
 const clearActiveTasks = () => {
 	global.tasks = []
-	global.activePath = null
+	global.state.activePath = null
 	Sender.tasksClear(global.mainWindow.webContents)
 }
 
@@ -49,13 +49,13 @@ module.exports = [
 				click () {
 					let path = Data.loadTasksFromFile(global.mainWindow)
 					if(path)
-						global.activePath = path
+						global.state.activePath = path
 				}
 			},
 			{
 				label: 'Save',
 				click () {
-					Data.saveTasksToFile(global.mainWindow, global.tasks, global.activePath)
+					Data.saveTasksToFile(global.mainWindow, global.tasks, global.state.activePath)
 				}
 			},
 			{
@@ -63,7 +63,7 @@ module.exports = [
 				click () {
 					let path = Data.saveTasksToFile(global.mainWindow, global.tasks)
 					if(path)
-						global.activePath = path
+						global.state.activePath = path
 				}
 			},
 			{ type: 'separator' },

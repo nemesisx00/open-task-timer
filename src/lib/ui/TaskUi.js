@@ -111,9 +111,7 @@ class TaskUi
 	 */
 	autoSaveTask()
 	{
-		let task = getGlobal('tasks').find(t => t.id === this.taskId)
-		let span = task.spans.find(s => s.id === this.currentSpanId)
-		span._end = moment()
+		Sender.taskSpanUpdate(this.taskId, this.currentSpanId, moment().format(timestampFormat))
 	}
 	
 	toggleActive()
@@ -140,7 +138,14 @@ class TaskUi
 		if(this.elements.elapsed != null)
 		{
 			let task = getGlobal('tasks').find(t => t.id === this.taskId)
-			this.elements.elapsed.innerHTML = this.formatter(task.duration)
+			let span = task.spans.find(s => s.id === this.currentSpanId)
+			
+			let duration = task.duration
+			let elapsed = moment().diff(span.end, 'seconds')
+			if(elapsed > 0)
+				duration += elapsed
+			
+			this.elements.elapsed.innerHTML = this.formatter(duration)
 		}
 	}
 }

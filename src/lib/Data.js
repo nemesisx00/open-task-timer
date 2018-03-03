@@ -38,7 +38,7 @@ const writeData = (path, data, truncate) => {
 					throw err2
 				
 				global.state.needsToSave = false
-				global.activePath = path
+				global.state.activePath = path
 			})
 		})
 	}
@@ -49,7 +49,7 @@ const writeData = (path, data, truncate) => {
 				throw err
 				
 			global.state.needsToSave = false
-			global.activePath = path
+			global.state.activePath = path
 		})
 	}
 }

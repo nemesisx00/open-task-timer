@@ -27,8 +27,10 @@ module.exports = MainListener
 
 function handleAutoSave()
 {
-	if(global.activePath && global.state.needsToSave)
-		Data.saveTasksToFile(global.mainWindow, global.tasks, global.activePath)
+	if(global.state.activePath)
+	{
+		Data.saveTasksToFile(global.mainWindow, global.tasks, global.state.activePath)
+	}
 }
 
 /**

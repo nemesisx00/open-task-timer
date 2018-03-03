@@ -21,7 +21,7 @@ const timeOptions = {
  */
 function momentize(val, def)
 {
-	let out = moment(val)
+	let out = moment(val, timestampFormat)
 	if(!out.isValid())
 		out = def ? moment() : null
 	
