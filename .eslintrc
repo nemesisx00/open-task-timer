@@ -15,7 +15,10 @@
     "indent": [ "error", "tab", { "SwitchCase": 1 } ],
     "linebreak-style": [ "off" ],
     "no-console": [ "off" ],
+    "no-inner-declarations": [ "off" ],
     "no-unexpected-multiline": [ "off" ],
-    "no-undef": [ "off" ]
+    "no-undef": [ "off" ],
+    "quotes": [ "error", "single", { "avoidEscape": true } ],
+    "semi": [ "error", "never" ]
   }
 }
