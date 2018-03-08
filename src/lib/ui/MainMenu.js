@@ -1,69 +1,41 @@
 'use static'
 
-const {dialog} = require('electron')
+const {dialog, Menu} = require('electron')
 const opn = require('opn')
 
 const Data = load('Data.js')
 const Sender = load('event/MainSender')
+const {fileNew, fileOpen, fileSave} = load('event/GenericEventHandlers')
 
-const clearActiveTasks = () => {
-	global.tasks = []
-	global.state.activePath = null
-	Sender.tasksClear(global.mainWindow.webContents)
-}
-
-module.exports = [
+const menuTemplate = [
 	{
 		label: 'File',
 		submenu: [
 			{
 				label: 'New',
+				accelerator: 'CommandOrControl+N',
 				click () {
-					//If any tasks exist, prompt the user to confirm. Should help prevent data loss.
-					if(global.tasks.length > 0)
-					{
-						dialog.showMessageBox(
-							global.mainWindow,
-							{
-								type: 'question',
-								buttons: ['Yes', 'No'],
-								title: 'Create New Task List',
-								message: 'Are you sure you want to create a new task list?',
-								detail: 'Creating a new task list will close the current task list without saving',
-								cancelId: 1
-							},
-							(response) => {
-								if(response === 0)
-									clearActiveTasks()
-							}
-						)
-					}
-					else
-					{
-						clearActiveTasks()
-					}
+					fileNew()
 				}
 			},
 			{
 				label: 'Open',
+				accelerator: 'CommandOrControl+O',
 				click () {
-					let path = Data.loadTasksFromFile(global.mainWindow)
-					if(path)
-						global.state.activePath = path
+					fileOpen()
 				}
 			},
 			{
 				label: 'Save',
+				accelerator: 'CommandOrControl+S',
 				click () {
-					Data.saveTasksToFile(global.mainWindow, global.tasks, global.state.activePath)
+					fileSave()
 				}
 			},
 			{
 				label: 'Save As...',
 				click () {
-					let path = Data.saveTasksToFile(global.mainWindow, global.tasks)
-					if(path)
-						global.state.activePath = path
+					Data.saveTasksToFile(global.mainWindow, global.tasks)
 				}
 			},
 			{ type: 'separator' },
@@ -139,7 +111,7 @@ THE SOFTWARE.`
 				}
 			},
 			{
-				label: 'Issue Tracker',
+				label: 'Report an Issue',
 				click () {
 					opn('https://bitbucket.org/nemesisx00/open-task-timer/issues')
 				}
@@ -147,3 +119,6 @@ THE SOFTWARE.`
 		]
 	}
 ]
+
+const menu = Menu.buildFromTemplate(menuTemplate)
+Menu.setApplicationMenu(menu)
