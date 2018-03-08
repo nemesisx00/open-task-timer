@@ -77,7 +77,8 @@ class Data
 			fs.readFile(path, (err, data) => {
 				if (err)
 					throw err
-				
+					
+				global.state.activePath = path
 				global.tasks = []
 				Sender.tasksClear(browserWindow.webContents)
 				
@@ -108,7 +109,6 @@ class Data
 			})
 		}
 		
-		global.state.activePath = path
 		return path
 	}
 	
