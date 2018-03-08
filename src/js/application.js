@@ -16,7 +16,13 @@ Listener.initialize()
 
 document.addEventListener('DOMContentLoaded', () => {
 	document.getElementById('createNewEntry').addEventListener('click', taskCreateHandler)
-	document.getElementById('newLabel').addEventListener('input', toggleAddButton)
+	
+	let newLabel = document.getElementById('newLabel')
+	newLabel.addEventListener('input', toggleAddButton)
+	newLabel.addEventListener('keyup', e => {
+		if(e.key === 'Enter')
+			taskCreateHandler()
+	})
 })
 
 // --------------------------------------------------
