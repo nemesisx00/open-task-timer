@@ -108,6 +108,7 @@ class Data
 			})
 		}
 		
+		global.state.activePath = path
 		return path
 	}
 	
