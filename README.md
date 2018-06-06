@@ -4,7 +4,7 @@
 
 ## Releases
 
-* [1.0.0-BETA Windows 64-bit](https://bitbucket.org/nemesisx00/open-task-timer/downloads/Open%20Task%20Timer-1.0.0-BETA%20Setup.exe) Note: Not yet signed with a Authenticode Code Signing certificate
+* [1.0.1 Windows 64-bit](https://bitbucket.org/nemesisx00/open-task-timer/downloads/open-task-timer-1.0.1-win-x64.7z)
 
 Find other versions on the [Downloads page](https://bitbucket.org/nemesisx00/open-task-timer/downloads/).
 
