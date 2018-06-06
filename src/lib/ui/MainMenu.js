@@ -1,10 +1,11 @@
-'use static'
+'use strict'
 
 const {dialog, Menu} = require('electron')
 const opn = require('opn')
 
 const Data = load('Data.js')
 const Sender = load('event/MainSender')
+const Settings = load('Settings')
 const {fileNew, fileOpen, fileSave} = load('event/GenericEventHandlers')
 
 const menuTemplate = [
@@ -48,12 +49,18 @@ const menuTemplate = [
 			{
 				label: 'Auto Save',
 				type: 'checkbox',
-				checked: true,
+				checked: global.state.settings.read(Settings.Keys.Autosave),
 				click (menuItem) {
 					if(menuItem.checked)
+					{
+						global.state.settings.update(Settings.Keys.Autosave, true)
 						Sender.autoSaveStart(global.mainWindow.webContents)
+					}
 					else
+					{
+						global.state.settings.update(Settings.Keys.Autosave, false)
 						Sender.autoSaveStop(global.mainWindow.webContents)
+					}
 				}
 			},
 			{ role: 'toggledevtools' }
