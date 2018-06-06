@@ -77,7 +77,7 @@ const menuTemplate = [
 					dialog.showMessageBox(global.mainWindow, {
 						type: 'info',
 						buttons: ['Ok'],
-						title: 'About Open Task Timer',
+						title: `About Open Task Timer ${global.VERSION}`,
 						message: 'Open Task Timer is an open source desktop application for effortlessly recording time spent doing all the things.'
 					})
 				}

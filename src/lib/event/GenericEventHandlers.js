@@ -29,7 +29,7 @@ function onAppReady()
 	let width = 360
 	let height = 540
 	
-	let window = new BrowserWindow({ width: width, height: height })
+	let window = new BrowserWindow({ width: width, height: height, title: `${global.APPTITLE} ${global.VERSION}` })
 	window.setMinimumSize(width, height)
 	window.on('close', onMainWindowClose)
 	window.on('closed', onMainWindowClosed)
