@@ -51,19 +51,21 @@ const menuTemplate = [
 				type: 'checkbox',
 				checked: global.state.settings.read(Settings.Keys.Autosave),
 				click (menuItem) {
+					global.state.settings.update(Settings.Keys.Autosave, menuItem.checked)
 					if(menuItem.checked)
-					{
-						global.state.settings.update(Settings.Keys.Autosave, true)
 						Sender.autoSaveStart(global.mainWindow.webContents)
-					}
 					else
-					{
-						global.state.settings.update(Settings.Keys.Autosave, false)
 						Sender.autoSaveStop(global.mainWindow.webContents)
-					}
 				}
 			},
-			{ role: 'toggledevtools' }
+			{
+				label: 'Single Task Mode',
+				type: 'checkbox',
+				checked: global.state.settings.read(Settings.Keys.Monotask),
+				click (menuItem) {
+					global.state.settings.update(Settings.Keys.Monotask, menuItem.checked)
+				}
+			}
 		]
 	},
 	{

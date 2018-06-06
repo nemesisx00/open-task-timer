@@ -5,6 +5,7 @@ require('moment-duration-format')
 const {getGlobal} = require('electron').remote
 
 const Sender = load('event/BrowserSender')
+const Keys = load('Settings').Keys
 const Util = load('Util')
 
 const timestampFormat = 'Y-MM-DD HH:mm:ss'
@@ -56,6 +57,21 @@ const generateElements = (self, id, title, currentElapsed, active) => {
 	}
 }
 
+function maybeHaltAllTasks()
+{
+	if(getGlobal('state').settings.read(Keys.Monotask))
+	{
+		var evt = document.createEvent('MouseEvents');
+    	evt.initMouseEvent('click', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
+		
+		let buttons = document.querySelectorAll('.task .button.active')
+		for(let button of buttons)
+		{
+			button.dispatchEvent(evt)
+		}
+	}
+}
+
 class TaskUi
 {
 	constructor(taskId, options)
@@ -84,6 +100,8 @@ class TaskUi
 	
 	start()
 	{
+		maybeHaltAllTasks()
+		
 		let task = getGlobal('tasks').find(t => t.id === this.taskId)
 		this.currentSpanId = task.spans.length + 1
 		Sender.taskSpanNew(this.taskId, this.currentSpanId, moment().format(timestampFormat))
