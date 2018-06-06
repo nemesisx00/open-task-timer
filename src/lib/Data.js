@@ -26,39 +26,13 @@ const defaultSaveOptions = Object.freeze({
 	]
 })
 
-const writeData = (path, data, truncate) => {
-	if(truncate)
+const handleCreatedTask = (webContents, obj) => {
+	let task = Task.fromJson(obj)
+	if(task)
 	{
-		fs.truncate(path, err1 => {
-			if(err1)
-				throw err1
-			
-			fs.writeFile(path, JSON.stringify(data), err2 => {
-				if(err2)
-					throw err2
-				
-				global.state.needsToSave = false
-				global.state.activePath = path
-			})
-		})
+		global.tasks.push(task)
+		Sender.taskCreated(webContents, task.id)
 	}
-	else
-	{
-		fs.writeFile(path, JSON.stringify(data), err => {
-			if(err)
-				throw err
-				
-			global.state.needsToSave = false
-			global.state.activePath = path
-		})
-	}
-}
-
-const writeDataSync = (path, data, truncate) => {
-	if(truncate)
-		fs.truncateSync(path)
-	fs.writeFileSync(path, JSON.stringify(data))
-	global.state.needsToSave = false
 }
 
 class Data
@@ -77,7 +51,7 @@ class Data
 			fs.readFile(path, (err, data) => {
 				if (err)
 					throw err
-					
+				
 				global.state.activePath = path
 				global.tasks = []
 				Sender.tasksClear(browserWindow.webContents)
@@ -86,25 +60,9 @@ class Data
 				if(typeof json === 'object')
 				{
 					if(Array.isArray(json))
-					{
-						json.forEach(obj => {
-							let task = Task.fromJson(obj)
-							if(task)
-							{
-								global.tasks.push(task)
-								Sender.taskCreated(browserWindow.webContents, task.id)
-							}
-						})
-					}
+						json.forEach(obj => handleCreatedTask(browserWindow.webContents, obj))
 					else
-					{
-						let task = Task.fromJson(json)
-						if(task)
-						{
-							global.tasks.push(task)
-							Sender.taskCreated(browserWindow.webContents, task.id)
-						}
-					}
+						handleCreatedTask(browserWindow.webContents, json)
 				}
 			})
 		}
@@ -122,10 +80,17 @@ class Data
 		
 		if(path)
 		{
-			if(synchronous)
-				writeDataSync(path, tasks, exists)
-			else
-				writeData(path, tasks, exists)
+			let options = {
+				truncate: exists,
+				synchronous: synchronous
+			}
+			Util.writeFile(path, JSON.stringify(tasks), options, err => {
+				if(err)
+					throw err
+				
+				global.state.needsToSave = false
+				global.state.activePath = path
+			})
 		}
 		
 		return path

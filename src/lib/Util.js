@@ -1,6 +1,13 @@
 'use strict'
 
+const fs = require('fs')
+const path = require('path')
+
 const classNameSeparator = ' '
+const defaultWriteFileOptions = {
+	truncate: false,
+	synchronous: false
+}
 
 class Util
 {
@@ -192,6 +199,81 @@ class Util
 			else
 				Util.addClassName(selector, cn)
 		})
+	}
+	
+	/**
+	 * Write data to a file.
+	 * @static
+	 * @param {string} file The path to which to write.
+	 * @param {array|object|string} data The data to be written.
+	 * @param {boolean|object|function} options (Optional) Expected options:
+	 *		- truncate: Whether or not file is truncated before writing.
+	 *		- synchronous: Whether or not operation uses synchronous functions.
+	 *
+	 *	If boolean, assumed to toggle truncate option.
+	 *
+	 *	If function, assumed to be the callback.
+	 * @param {function} callback (Optional) Function to call after write operation has been executed.
+	 *	Defaults to function which throws the first parameter if it exists.
+	 */
+	static writeFile(file, data, options, callback)
+	{
+		let writePath = path.normalize(file)
+		if(!data)
+			throw 'No data to write'
+		
+		if(options && ['boolean', 'function', 'object'].indexOf(typeof options) < 0)
+			throw {
+				message: 'Invalid argument: `options`',
+				value: options
+			}
+		
+		if(!options)
+			options = defaultWriteFileOptions
+		else if(typeof options === 'function')
+		{
+			callback = options
+			options = defaultWriteFileOptions
+		}
+		else if(typeof options === 'boolean')
+		{
+			options = {
+				truncate: options,
+				synchronous: false
+			}
+		}
+		
+		if(!callback)
+		{
+			callback = err => {
+				if(err)
+					throw err
+			}
+		}
+		
+		if(options.synchronous)
+		{
+			if(options.truncate)
+				fs.truncateSync(writePath)
+			fs.writeFileSync(writePath, data)
+			
+			if(callback)
+				callback()
+		}
+		else
+		{
+			if(options.truncate)
+			{
+				fs.truncate(writePath, truncErr => {
+					if(truncErr)
+						throw truncErr
+					
+					fs.writeFile(writePath, data, callback)
+				})
+			}
+			else
+				fs.writeFile(writePath, data, callback)
+		}
 	}
 }
 
