@@ -61,9 +61,7 @@ function maybeHaltAllTasks()
 {
 	if(getGlobal('state').settings.read(Keys.Monotask))
 	{
-		var evt = document.createEvent('MouseEvents');
-    	evt.initMouseEvent('click', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
-		
+		let evt = new MouseEvent('click')
 		let buttons = document.querySelectorAll('.task .button.active')
 		for(let button of buttons)
 		{
