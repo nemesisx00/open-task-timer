@@ -8,6 +8,7 @@ const Util = load('Util')
 
 const defaultSettings = {
 	autosave: true,
+	autosort: true,
 	monotask: false
 }
 
@@ -71,6 +72,7 @@ class Settings
 Settings.FileName = 'settings.otts'
 Settings.Keys = Object.freeze({
 	Autosave: 'autosave',
+	Autosort: 'autosort',
 	Monotask: 'monotask'
 })
 

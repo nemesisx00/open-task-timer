@@ -14,6 +14,8 @@ class BrowserListener
 		ipcRenderer.on(Events.auto.save.start, handleAutoSaveStart)
 		ipcRenderer.on(Events.auto.save.stop, handleAutoSaveStop)
 		ipcRenderer.on(Events.auto.saved, handleAutoSaved)
+		ipcRenderer.on(Events.auto.sort.start, handleAutoSortStart)
+		ipcRenderer.on(Events.auto.sort.stop, handleAutoSortStop)
 		ipcRenderer.on(Events.state.clear, handleTasksClear)
 		ipcRenderer.on(Events.task.created, handleTaskCreated)
 	}
@@ -50,6 +52,17 @@ function handleAutoSaved(event, arg)
 	{
 		Sender.log('Auto save successful')
 	}
+}
+
+function handleAutoSortStart()
+{
+	global.taskSorter.active = true
+	global.taskSorter._start()
+}
+
+function handleAutoSortStop()
+{
+	global.taskSorter.active = false
 }
 
 function handleTasksClear()

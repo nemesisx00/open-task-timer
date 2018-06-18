@@ -1,9 +1,12 @@
 'use strict'
 
 require('../init')
+const {getGlobal} = require('electron').remote
 
-const Sender = load('event/BrowserSender')
+const ChildSorter = load('ui/ChildSorter')
 const Listener = load('event/BrowserListener')
+const Sender = load('event/BrowserSender')
+const Keys = load('Settings').Keys
 const Util = load('Util')
 
 global.defaults = Object.freeze({
@@ -11,6 +14,7 @@ global.defaults = Object.freeze({
 })
 global.taskUis = []
 global.autoSaveTimer = setInterval(Sender.autoSave, global.defaults.autoSaveDelay)
+global.taskSorter = null
 
 Listener.initialize()
 
@@ -23,6 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
 		if(e.key === 'Enter')
 			taskCreateHandler()
 	})
+	
+	global.taskSorter = new ChildSorter('#container', (a, b) => a.querySelector('.title').innerHTML.localeCompare(b.querySelector('.title').innerHTML))
 })
 
 // --------------------------------------------------

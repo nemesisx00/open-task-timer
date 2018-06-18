@@ -15,6 +15,16 @@ class MainSender
 		sender.send(Events.auto.save.stop)
 	}
 	
+	static autoSortStart(sender)
+	{
+		sender.send(Events.auto.sort.start)
+	}
+	
+	static autoSortStop(sender)
+	{
+		sender.send(Events.auto.sort.stop)
+	}
+	
 	static tasksClear(sender)
 	{
 		sender.send(Events.state.clear)

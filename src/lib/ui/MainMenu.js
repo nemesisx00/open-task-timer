@@ -4,8 +4,8 @@ const {dialog, Menu} = require('electron')
 const opn = require('opn')
 
 const Data = load('Data.js')
+const Keys = load('Settings').Keys
 const Sender = load('event/MainSender')
-const Settings = load('Settings')
 const {fileNew, fileOpen, fileSave} = load('event/GenericEventHandlers')
 
 const menuTemplate = [
@@ -49,9 +49,9 @@ const menuTemplate = [
 			{
 				label: 'Auto Save',
 				type: 'checkbox',
-				checked: global.state.settings.read(Settings.Keys.Autosave),
+				checked: global.state.settings.read(Keys.Autosave),
 				click (menuItem) {
-					global.state.settings.update(Settings.Keys.Autosave, menuItem.checked)
+					global.state.settings.update(Keys.Autosave, menuItem.checked)
 					if(menuItem.checked)
 						Sender.autoSaveStart(global.mainWindow.webContents)
 					else
@@ -59,11 +59,23 @@ const menuTemplate = [
 				}
 			},
 			{
+				label: 'Auto Sort Tasks',
+				type: 'checkbox',
+				checked: global.state.settings.read(Keys.Autosort),
+				click (menuItem) {
+					global.state.settings.update(Keys.Autosort, menuItem.checked)
+					if(menuItem.checked)
+						Sender.autoSortStart(global.mainWindow.webContents)
+					else
+						Sender.autoSortStop(global.mainWindow.webContents)
+				}
+			},
+			{
 				label: 'Single Task Mode',
 				type: 'checkbox',
-				checked: global.state.settings.read(Settings.Keys.Monotask),
+				checked: global.state.settings.read(Keys.Monotask),
 				click (menuItem) {
-					global.state.settings.update(Settings.Keys.Monotask, menuItem.checked)
+					global.state.settings.update(Keys.Monotask, menuItem.checked)
 				}
 			}
 		]

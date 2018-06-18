@@ -6,7 +6,11 @@ module.exports = Object.freeze({
 			start: 'auto-save-start',
 			stop: 'auto-save-stop'
 		}),
-		saved: 'auto-saved'
+		saved: 'auto-saved',
+		sort: Object.freeze({
+			start: 'auto-sort-start',
+			stop: 'auto-sort-stop'
+		})
 	}),
 	state: Object.freeze({
 		clear: 'tasks-clear'
