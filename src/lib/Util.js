@@ -72,16 +72,27 @@ class Util
 	 */
 	static dispatch(selector, eventName)
 	{
-		let el = selector
-		if(Util.checkType(selector, 'string'))
-			el = document.querySelector(selector.trim())
-		
+		let el = Util.elementOrSelector(selector)
 		let evt = eventName
 		if(Util.checkType(evt, 'string'))
 			evt = new Event(eventName)
 		
-		if(el)
+		if(el && evt)
 			el.dispatchEvent(evt)
+	}
+	
+	/**
+	 * Normalize selectors and elements to an instance of Element.
+	 * @static
+	 * @param {string|Element} selector The element to select.
+	 * @return {Element} The selected element. May be null.
+	 */
+	static elementOrSelector(selector)
+	{
+		let el = selector
+		if(Util.checkType(selector, 'string'))
+			el = document.querySelector(selector.trim())
+		return el
 	}
 	
 	/**
@@ -96,10 +107,7 @@ class Util
 		if(Array.isArray(className))
 			toAdd = Array.from(className)
 		
-		let el = selector
-		if(Util.checkType(selector, 'string'))
-			el = document.querySelector(selector.trim())
-		
+		let el = Util.elementOrSelector(selector)
 		if(el)
 		{
 			let existing = el.className.split(classNameSeparator)
@@ -122,10 +130,7 @@ class Util
 	 */
 	static hasClassName(selector, className)
 	{
-		let el = selector
-		if(Util.checkType(selector, 'string'))
-			el = document.querySelector(selector.trim())
-		
+		let el = Util.elementOrSelector(selector)
 		let out = false
 		if(el)
 		{
@@ -148,10 +153,7 @@ class Util
 		if(Array.isArray(className))
 			toRemove = Array.from(className)
 		
-		let el = selector
-		if(Util.checkType(selector, 'string'))
-			el = document.querySelector(selector.trim())
-		
+		let el = Util.elementOrSelector(selector)
 		if(el)
 		{
 			let existing = el.className.split(classNameSeparator)
