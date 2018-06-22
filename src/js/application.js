@@ -4,6 +4,7 @@ require('../init')
 const {getGlobal} = require('electron').remote
 
 const ChildSorter = load('ui/ChildSorter')
+const TaskContextMenu = load('ui/TaskContextMenu')
 const Listener = load('event/BrowserListener')
 const Sender = load('event/BrowserSender')
 const Keys = load('Settings').Keys
@@ -15,6 +16,7 @@ global.defaults = Object.freeze({
 global.taskUis = []
 global.autoSaveTimer = setInterval(Sender.autoSave, global.defaults.autoSaveDelay)
 global.taskSorter = null
+global.taskContextMenu = new TaskContextMenu()
 
 Listener.initialize()
 

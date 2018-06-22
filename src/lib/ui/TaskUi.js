@@ -10,31 +10,33 @@ const Util = load('Util')
 
 const timestampFormat = 'Y-MM-DD HH:mm:ss'
 const timeFormat = 'y [years] d [days] hh:mm:ss'
-const timeOptions = {
+const timeOptions = Object.freeze({
 	forceLength: true,
 	useGrouping: false,
 	stopTrim: 'h'
-}
+})
 
 const defaultDelay = 1000
 const defaultFormatter = duration => moment.duration(duration, 'seconds').format(timeFormat, timeOptions)
 
 const generateElements = (self, id, title, currentElapsed, active) => {
 	let labelDiv = Object.assign(document.createElement('div'), {
-		className: 'title',
+		className: 'title grow',
 		innerHTML: title
 	})
 	
 	let elapsed = Object.assign(document.createElement('div'), {
-		className: 'elapsed',
+		className: 'elapsed shrink',
 		innerHTML: currentElapsed
 	})
 	
 	let button = Object.assign(document.createElement('div'), {
-		className: 'button' + (active ? ' active' : '')
+		className: 'button shrink' + (active ? ' active' : '')
 	})
 	
-	button.addEventListener('click', () => {
+	button.addEventListener('click', e => {
+		e.preventDefault()
+		
 		if(!self.active)
 			self.start()
 		else
@@ -42,9 +44,16 @@ const generateElements = (self, id, title, currentElapsed, active) => {
 	})
 	
 	let out = Object.assign(document.createElement('div'), {
-		className: 'row task'
+		className: 'row task shrink'
 	})
 	out.id = id
+	out.addEventListener('contextmenu', e => {
+		let el = e.target
+		if(el.className.indexOf('task') < 0)
+			el = e.target.parentElement
+		
+		global.taskContextMenu.attach(el, e.clientX, e.clientY)
+	})
 	
 	out.append(labelDiv)
 	out.append(elapsed)

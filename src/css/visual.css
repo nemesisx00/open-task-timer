@@ -4,6 +4,27 @@ html, body
 	background-color: #2A2B2A;
 }
 
+.hidden
+{
+	opacity: 0;
+	visibility: hidden;
+}
+
+.contextMenu
+{
+	border: 1px solid #343330;
+	border-radius: 5px;
+	background-color: #2A2B2A;
+}
+
+.contextMenu .item
+{
+	cursor: pointer;
+	padding: 2px 5px;
+	border-top: 1px solid #343330;
+}
+.contextMenu .item:first-child { border-top: 0 none; }
+
 .row
 {
 	background-color: #465362;
