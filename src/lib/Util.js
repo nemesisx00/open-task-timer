@@ -35,6 +35,18 @@ class Util
 	}
 	
 	/**
+	 * Create a new instance of Element.
+	 * @static
+	 * @param {string} tag The tag of the element to be created.
+	 * @param {object} attributes (Optional) The object containing any custom attributes to be set on the new element.
+	 * @return {Element} Returns the new instance of Element.
+	 */
+	static createElement(tag, attributes)
+	{
+		return Object.assign(document.createElement(tag), attributes)
+	}
+	
+	/**
 	 * Merge objects together into a new object. Recurses through sub-objects to merge at all levels.
 	 * Right-most objects in the parameter list will overwrite existing values.
 	 * @static
