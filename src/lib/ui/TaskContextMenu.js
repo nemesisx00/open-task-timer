@@ -2,7 +2,7 @@
 
 const Util = load('Util')
 
-const mouseOutTimeout = 1500
+const mouseOutTimeout = 3000
 const generateMenuItem = (label, handler) => {
 	let item = Util.createElement('div', {
 		className: 'item shrink',
@@ -26,18 +26,9 @@ class TaskContextMenu
 		this.hideTimeout = null
 	}
 	
-	_mouseOutHandler(e)
-	{
-		e.preventDefault()
-		if(this.hideTimeout)
-			clearTimeout(this.hideTimeout)
-		this.hideTimeout = setTimeout(this.hide, mouseOutTimeout)
-	}
-	
 	_generateMenu(id)
 	{
 		let menu = Util.createElement('div', { className: 'contextMenu hidden', id: id ? id : '' })
-		menu.addEventListener('mouseout', this._mouseOutHandler)
 		
 		let self = this
 		let items = [
@@ -57,7 +48,17 @@ class TaskContextMenu
 		]
 		
 		items.forEach(el => {
-			el.addEventListener('mouseout', self._mouseOutHandler)
+			el.addEventListener('mouseover', e => {
+				e.preventDefault()
+				if(self.hideTimeout)
+					clearTimeout(self.hideTimeout)
+			})
+			el.addEventListener('mouseout', e => {
+				e.preventDefault()
+				if(self.hideTimeout)
+					clearTimeout(self.hideTimeout)
+				self.hideTimeout = setTimeout(() => self.hide(), mouseOutTimeout)
+			})
 			menu.appendChild(el)
 		})
 		
