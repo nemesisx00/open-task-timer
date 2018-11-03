@@ -35,7 +35,7 @@ function onAppReady()
 	window.on('closed', onMainWindowClosed)
 	
 	load('ui/MainMenu')
-	
+	//window.toggleDevTools()
 	window.loadURL('file://' + path.join(__dirname, '..', '..', 'html', 'index.html'))
 	
 	//Register all the shortcut handlers
