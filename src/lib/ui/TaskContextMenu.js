@@ -1,5 +1,8 @@
 'use strict'
 
+const {getGlobal} = require('electron').remote
+
+const Sender = load('event/BrowserSender')
 const Util = load('Util')
 
 const mouseOutTimeout = 3000
@@ -32,6 +35,17 @@ class TaskContextMenu
 		
 		let self = this
 		let items = [
+			generateMenuItem('View Time Spans', e => {
+				e.preventDefault()
+				if(self.taskElement)
+				{
+					let taskId = parseInt(self.taskElement.id.replace('task-', ''))
+					if(!Number.isNaN(taskId))
+						Sender.taskView(taskId)
+				}
+				self.hide()
+			}),
+			
 			generateMenuItem('Move Up', e => {
 				e.preventDefault()
 				if(self.taskElement.previousElementSibling)

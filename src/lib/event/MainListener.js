@@ -18,6 +18,7 @@ class MainListener
 		ipcMain.on(Events.task.new, handleTaskNew)
 		ipcMain.on(Events.task.span.new, handleTaskSpanNew)
 		ipcMain.on(Events.task.span.update, handleTaskSpanUpdate)
+		ipcMain.on(Events.task.view, handleTaskView)
 	}
 }
 
@@ -89,5 +90,15 @@ function handleTaskSpanUpdate(event, arg)
 				global.state.needsToSave = true
 			}
 		}
+	}
+}
+
+function handleTaskView(event, arg)
+{
+	if(arg && arg.taskId)
+	{
+		let task = global.tasks.find(t => t.id == arg.taskId)
+		if(task)
+			Util.createTaskWindow(task)
 	}
 }

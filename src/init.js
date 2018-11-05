@@ -10,3 +10,4 @@ global.load = name => {
 
 global.APPTITLE = require('../package.json').productName
 global.VERSION = require('../package.json').version
+global.viewPath = path.join(__dirname, 'html')

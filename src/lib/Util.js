@@ -2,6 +2,7 @@
 
 const fs = require('fs')
 const path = require('path')
+const {BrowserWindow} = require('electron')
 
 const classNameSeparator = ' '
 const defaultWriteFileOptions = {
@@ -44,6 +45,30 @@ class Util
 	static createElement(tag, attributes)
 	{
 		return Object.assign(document.createElement(tag), attributes)
+	}
+	
+	/**
+	 * Create a window for viewing/editing a task.
+	 */
+	static createTaskWindow(task)
+	{
+		let width = 480
+		let height = 360
+		
+		let window = new BrowserWindow({
+			width,
+			height,
+			parent: global.mainWindow,
+			modal: true,
+			title: `Task - ${task.title}`,
+			show: false
+		})
+		window.setMinimumSize(width, height)
+		window.setMenu(null)
+		window.loadURL('file://' + path.join(global.viewPath, 'task.html'))
+		window.once('ready-to-show', () => {
+			window.show()
+		})
 	}
 	
 	/**

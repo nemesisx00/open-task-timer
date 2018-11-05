@@ -23,7 +23,7 @@ class BrowserSender
 	
 	static taskNew(title)
 	{
-		ipcRenderer.send(Events.task.new, { title: title })
+		ipcRenderer.send(Events.task.new, { title })
 	}
 	
 	static taskSpanNew(taskId, spanId, start)
@@ -42,6 +42,11 @@ class BrowserSender
 			spanId: spanId,
 			end: end
 		})
+	}
+	
+	static taskView(taskId)
+	{
+		ipcRenderer.send(Events.task.view, { taskId })
 	}
 }
 

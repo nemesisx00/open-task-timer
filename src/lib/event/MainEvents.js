@@ -9,7 +9,8 @@ module.exports = Object.freeze({
 		span: Object.freeze({
 			new: 'task-span-new',
 			update: 'task-span-update'
-		})
+		}),
+		view: 'task-view'
 	}),
 	log: 'log'
 })
