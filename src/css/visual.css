@@ -15,6 +15,7 @@ html, body
 	border: 1px solid #343330;
 	border-radius: 5px;
 	background-color: #2A2B2A;
+	z-index: 100;
 }
 
 .contextMenu .item
