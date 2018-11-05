@@ -2,7 +2,6 @@
 
 const {getGlobal} = require('electron').remote
 
-const Keys = load('Settings').Keys
 const Util = load('Util')
 
 const observerOptions = { childList: true }
@@ -35,20 +34,30 @@ class ChildSorter
 		else if(this.element && this.element.children && mutations.find(m => m.type === 'childList'))
 		{
 			this.observer.disconnect()
-			
-			let arr = []
-			for(let el of this.element.children)
-			{
-				arr.push(el)
-			}
-			
-			arr.sort(this.sort)
-			arr.forEach(el => this.element.appendChild(el))
+			this._sortChildren()
 			this._start()
 		}
 	}
 	
-	_start() { this.observer.observe(this.element, observerOptions) }
+	_start(sortNow)
+	{
+		if(sortNow === true)
+			this._sortChildren()
+		
+		this.observer.observe(this.element, observerOptions)
+	}
+	
+	_sortChildren()
+	{
+		let arr = []
+		for(let el of this.element.children)
+		{
+			arr.push(el)
+		}
+		
+		arr.sort(this.sort)
+		arr.forEach(el => this.element.appendChild(el))
+	}
 }
 
 module.exports = ChildSorter

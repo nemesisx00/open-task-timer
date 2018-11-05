@@ -57,7 +57,7 @@ function handleAutoSaved(event, arg)
 function handleAutoSortStart()
 {
 	global.taskSorter.active = true
-	global.taskSorter._start()
+	global.taskSorter._start(true)
 }
 
 function handleAutoSortStop()

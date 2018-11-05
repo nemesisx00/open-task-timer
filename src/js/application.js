@@ -31,12 +31,22 @@ document.addEventListener('DOMContentLoaded', () => {
 	})
 	
 	global.taskSorter = new ChildSorter('#container', (a, b) => a.querySelector('.title').innerHTML.localeCompare(b.querySelector('.title').innerHTML))
+	//Make sure the child sorter's status matches the current settings
+	//Otherwise it will always be inactive until the user toggles the menu item
+	if(getGlobal('state').settings.read(Keys.Autosort) === true)
+	{
+		global.taskSorter.active = true
+		global.taskSorter._start()
+	}
+	else
+		global.taskSorter.active = false
 })
 
 // --------------------------------------------------
 
 let addButton = document.getElementById('createNewEntry')
 let titleInput = document.getElementById('newLabel')
+let errorDisplay = document.getElementById('errorDisplay')
 
 function taskCreateHandler()
 {
