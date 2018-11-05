@@ -29,14 +29,23 @@ function onAppReady()
 	let width = 360
 	let height = 540
 	
-	let window = new BrowserWindow({ width: width, height: height, title: `${global.APPTITLE} ${global.VERSION}` })
+	let window = new BrowserWindow({
+		width,
+		height,
+		show: false,
+		title: `${global.APPTITLE} ${global.VERSION}`,
+		backgroundColor: '#2A2B2A'
+	})
 	window.setMinimumSize(width, height)
 	window.on('close', onMainWindowClose)
 	window.on('closed', onMainWindowClosed)
 	
 	load('ui/MainMenu')
 	//window.toggleDevTools()
-	window.loadURL('file://' + path.join(__dirname, '..', '..', 'html', 'index.html'))
+	window.loadURL('file://' + path.join(global.viewPath, 'index.html'))
+	window.once('ready-to-show', () => {
+		window.show()
+	})
 	
 	//Register all the shortcut handlers
 	Object.entries(shortcutHandlers).map(entry => globalShortcut.register(entry[0], entry[1]))
