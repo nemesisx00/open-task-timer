@@ -44,7 +44,7 @@ class Tools
 		window.once('ready-to-show', () => {
 			window.webContents.send(OneTimeEvents.viewTask, { task })
 			window.show()
-			window.toggleDevTools()
+			//window.toggleDevTools()
 		})
 	}
 	

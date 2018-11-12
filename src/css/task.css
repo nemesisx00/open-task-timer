@@ -36,7 +36,7 @@ html, body
 {
 	display: flex;
 	flex-flow: row nowrap;
-	padding: 0 5px;
+	padding: 2px 5px;
 	background-color: #465362;
 }
 #container .day .timeSpan.alt { background-color: #2E3844; }
@@ -49,7 +49,7 @@ html, body
 	text-align: center;
 }
 
-#container .day .timeSpan .spacer { margin: 0 5px 0px 10px; }
+#container .day .timeSpan .spacer { margin: 0 7px 0px 10px; }
 
 #container .day .timeSpan .duration
 {

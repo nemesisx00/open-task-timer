@@ -11,7 +11,7 @@ const OneTimeEvents = load('event/OneTimeEvents')
 global.task = null
 
 const dateFormat = 'Y-MM-DD'
-const timeFormat = 'HH:mm A'
+const timeFormat = 'hh:mm A'
 
 const dayTemplate = `
 			<div class="day shrink">
@@ -76,17 +76,13 @@ ipcRenderer.on(OneTimeEvents.viewTask, (event, args) => {
 	{
 		let parsed = parseTimeSpans(args.task)
 		
-		let html = ''
+		let html = []
 		for(let date in parsed)
 		{
 			if(parsed[date])
-			{
-				if(html)
-					html += '\n'
-				html += buildDayHtml(date, parsed[date])
-			}
+				html.push(buildDayHtml(date, parsed[date]))
 		}
 		
-		document.getElementById('container').innerHTML = html
+		document.getElementById('container').innerHTML = html.join('\n')
 	}
 })
