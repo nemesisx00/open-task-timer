@@ -1,5 +1,4 @@
-@import url('./layout.css');
-@import url('./visual.css');
+@import url('./utility.css');
 
 html, body
 {
@@ -7,4 +6,53 @@ html, body
 	margin: 0;
 	height: 100vh;
 	overflow: hidden;
+	color: #F0EAD6;
+	background-color: #2A2B2A;
+}
+
+#container
+{
+	display: flex;
+	flex-flow: column nowrap;
+}
+
+#container .day
+{
+	display: flex;
+	flex-flow: column nowrap;
+	padding: 5px 0;
+	border-bottom: 1px solid;
+}
+
+#container .day .label
+{
+	font-size: 1.5em;
+	font-weight: bold;
+	padding-left: 5px;
+	margin-bottom: 5px;
+}
+
+#container .day .timeSpan
+{
+	display: flex;
+	flex-flow: row nowrap;
+	padding: 0 5px;
+	background-color: #465362;
+}
+#container .day .timeSpan.alt { background-color: #2E3844; }
+
+#container .day .timeSpan .startTime { margin-left: 10px; }
+#container .day .timeSpan .startTime,
+#container .day .timeSpan .endTime
+{
+	width: 70px;
+	text-align: center;
+}
+
+#container .day .timeSpan .spacer { margin: 0 5px 0px 10px; }
+
+#container .day .timeSpan .duration
+{
+	text-align: right;
+	margin-right: 10px;
 }
