@@ -7,6 +7,7 @@ const Events = load('event/MainEvents')
 const Sender = load('event/MainSender')
 const Task = load('model/Task')
 const TimeSpan = load('model/TimeSpan')
+const Tools = load('ui/Tools')
 const Util = load('Util')
 
 class MainListener
@@ -99,6 +100,6 @@ function handleTaskView(event, arg)
 	{
 		let task = global.tasks.find(t => t.id == arg.taskId)
 		if(task)
-			Util.createTaskWindow(task)
+			Tools.createTaskWindow(task)
 	}
 }

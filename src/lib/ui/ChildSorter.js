@@ -1,8 +1,6 @@
 'use strict'
 
-const {getGlobal} = require('electron').remote
-
-const Util = load('Util')
+const Tools = load('ui/Tools')
 
 const observerOptions = { childList: true }
 const defaultSort = (a, b) => a.innerHTML.localeCompare(b.innerHTML)
@@ -14,7 +12,7 @@ class ChildSorter
 {
 	constructor(selector, sort)
 	{
-		let el = Util.elementOrSelector(selector)
+		let el = Tools.elementOrSelector(selector)
 		if(!el)
 			throw 'Invalid argument: selector'
 		

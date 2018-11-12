@@ -8,6 +8,7 @@ const TaskContextMenu = load('ui/TaskContextMenu')
 const Listener = load('event/BrowserListener')
 const Sender = load('event/BrowserSender')
 const Keys = load('Settings').Keys
+const Tools = load('ui/Tools')
 const Util = load('Util')
 
 global.defaults = Object.freeze({
@@ -61,7 +62,7 @@ function taskCreateHandler()
 function toggleAddButton()
 {
 	if(titleInput.value.length > 0)
-		Util.removeClassName(addButton, 'disabled')
+		Tools.removeClassName(addButton, 'disabled')
 	else
-		Util.addClassName(addButton, 'disabled')
+		Tools.addClassName(addButton, 'disabled')
 }

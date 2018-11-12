@@ -6,7 +6,7 @@ const {getGlobal} = require('electron').remote
 
 const Sender = load('event/BrowserSender')
 const Keys = load('Settings').Keys
-const Util = load('Util')
+const Tools = load('ui/Tools')
 
 const timestampFormat = 'Y-MM-DD HH:mm:ss'
 const timeFormat = 'y [years] d [days] hh:mm:ss'
@@ -148,7 +148,7 @@ class TaskUi
 				this.elements.button = el
 		}
 		
-		Util.toggleClassName(this.elements.button, 'active')
+		Tools.toggleClassName(this.elements.button, 'active')
 	}
 	
 	updateDisplay()

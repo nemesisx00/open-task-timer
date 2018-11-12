@@ -1,13 +1,11 @@
 'use strict'
 
-const {getGlobal} = require('electron').remote
-
 const Sender = load('event/BrowserSender')
-const Util = load('Util')
+const Tools = load('ui/Tools')
 
 const mouseOutTimeout = 3000
 const generateMenuItem = (label, handler) => {
-	let item = Util.createElement('div', {
+	let item = Tools.createElement('div', {
 		className: 'item shrink',
 		innerHTML: label
 	})
@@ -31,7 +29,7 @@ class TaskContextMenu
 	
 	_generateMenu(id)
 	{
-		let menu = Util.createElement('div', { className: 'contextMenu hidden', id: id ? id : '' })
+		let menu = Tools.createElement('div', { className: 'contextMenu hidden', id: id ? id : '' })
 		
 		let self = this
 		let items = [
@@ -83,7 +81,7 @@ class TaskContextMenu
 	
 	attach(selector, x, y)
 	{
-		let el = Util.elementOrSelector(selector)
+		let el = Tools.elementOrSelector(selector)
 		if(el && x && y)
 		{
 			this.taskElement = el
@@ -95,12 +93,12 @@ class TaskContextMenu
 	{
 		this.element.style.left = `${x}px`
 		this.element.style.top = `${y}px`
-		Util.removeClassName(this.element, 'hidden')
+		Tools.removeClassName(this.element, 'hidden')
 	}
 	
 	hide()
 	{
-		Util.addClassName(this.element, 'hidden')
+		Tools.addClassName(this.element, 'hidden')
 	}
 }
 
