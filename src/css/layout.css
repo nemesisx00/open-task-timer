@@ -4,9 +4,6 @@ body
 	flex-direction: column;
 }
 
-.shrink { flex-grow: 0; flex-shrink: 1; }
-.grow { flex-grow: 1; }
-
 .row
 {
 	min-height: 50px;

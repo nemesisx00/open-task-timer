@@ -4,12 +4,6 @@ html, body
 	background-color: #2A2B2A;
 }
 
-.hidden
-{
-	opacity: 0;
-	visibility: hidden;
-}
-
 .contextMenu
 {
 	border: 1px solid #343330;
