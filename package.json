@@ -1,7 +1,7 @@
 {
   "name": "open-task-timer",
   "productName": "Open Task Timer",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Open Task Timer built with Electron",
   "main": "src/main.js",
   "scripts": {
