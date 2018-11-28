@@ -4,7 +4,7 @@
 
 ## Releases
 
-* [1.0.1 Windows 64-bit](https://bitbucket.org/nemesisx00/open-task-timer/downloads/open-task-timer-1.0.1-win-x64.7z)
+* [1.1.0 Windows 64-bit](https://bitbucket.org/nemesisx00/open-task-timer/downloads/open-task-timer-1.1.0-windows-x64.7z)
 
 Find other versions on the [Downloads page](https://bitbucket.org/nemesisx00/open-task-timer/downloads/).
 
