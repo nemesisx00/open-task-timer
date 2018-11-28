@@ -8,6 +8,7 @@ const sprintf = require('sprintf-js').sprintf
 
 const OneTimeEvents = load('event/OneTimeEvents')
 const Tools = load('ui/Tools')
+const Util = load('Util')
 
 global.task = null
 
@@ -30,6 +31,10 @@ const timespanTemplate = `
 				</div>
 `
 
+const durationFormat = 'h [hours] m [minutes]'
+const durationFormat_minutes = 'm [minutes] s [seconds]'
+const durationFormat_seconds = 's [seconds]'
+
 function parseTimeSpans(task)
 {
 	let parsed = {}
@@ -48,10 +53,16 @@ function parseTimeSpans(task)
 			if(!parsed[date])
 				parsed[date] = []
 			
+			let format = durationFormat
+			if(duration.asMinutes() < 1)
+				format = durationFormat_seconds
+			else if(duration.asMinutes() < 60)
+				format = durationFormat_minutes
+			
 			parsed[date].push({
 				start: start.format(timeFormat),
 				end: end ? end.format(timeFormat) : 'N/A',
-				duration: `${duration.hours()} hours ${duration.minutes()} minutes`
+				duration: Util.formatDuration(duration, format)
 			})
 		}
 	}

@@ -10,6 +10,7 @@ const defaultWriteFileOptions = {
 	synchronous: false
 }
 
+const dateFormat = 'Y-MM-DD'
 const timestampFormat = 'Y-MM-DD HH:mm:ss'
 const timeFormat = 'y [years] d [days] hh:mm:ss'
 const timeOptions = Object.freeze({
@@ -179,6 +180,7 @@ class Util
 	}
 }
 
+Util.Format_FullDate = dateFormat
 Util.Format_FullTimestamp = timestampFormat
 Util.Format_DurationTime = timeFormat
 Util.Format_DurationTime_Options = timeOptions

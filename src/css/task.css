@@ -5,7 +5,8 @@ html, body
 	padding: 0;
 	margin: 0;
 	height: 100vh;
-	overflow: hidden;
+	overflow-x: hidden;
+	overflow-y: auto;
 	color: #F0EAD6;
 	background-color: #2A2B2A;
 }

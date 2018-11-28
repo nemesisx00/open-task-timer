@@ -1,6 +1,10 @@
 'use strict'
 
+const moment = require('moment')
+require('moment-duration-format')
+
 const TimeSpan = load('model/TimeSpan')
+const Util = load('Util')
 
 class Task
 {
@@ -38,6 +42,12 @@ class Task
 	}
 	
 	get duration() { return this.spans.reduce((acc, val) => acc + val.seconds, 0) }
+	get durationToday()
+	{
+		let today = moment().format(Util.Format_FullDate)
+		return this.spans.filter(span => span.start.format(Util.Format_FullDate) == today)
+				.reduce((acc, val) => acc + val.seconds, 0)
+	}
 	
 	toJson()
 	{

@@ -94,7 +94,7 @@ class TaskUi
 		this.formatter = options && typeof options.formatter === 'function' ? options.formatter : defaultFormatter
 		
 		let task = getGlobal('tasks').find(t => t.id === this.taskId)
-		this.elements = generateElements(this, `task-${task.id}`, task.title, this.formatter(task.duration), false)
+		this.elements = generateElements(this, `task-${task.id}`, task.title, this.formatter(task.durationToday), false)
 	}
 	
 	append()
@@ -165,7 +165,7 @@ class TaskUi
 			let task = getGlobal('tasks').find(t => t.id === this.taskId)
 			let span = task.spans.find(s => s.id === this.currentSpanId)
 			
-			let duration = task.duration
+			let duration = task.durationToday
 			let elapsed = moment().diff(span.end, 'seconds')
 			if(elapsed > 0)
 				duration += elapsed
