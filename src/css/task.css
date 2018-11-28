@@ -10,6 +10,21 @@ html, body
 	background-color: #2A2B2A;
 }
 
+.hidden
+{
+	height: 0;
+	padding: 0 !important;
+}
+
+#label
+{
+	width: 100%;
+	height: 50px;
+	line-height: 50px;
+	font-size: 2em;
+	font-weight: bold;
+}
+
 #container
 {
 	display: flex;
@@ -23,9 +38,11 @@ html, body
 	padding: 5px 0;
 	border-bottom: 1px solid;
 }
+#container .day:last-child { border-bottom: 0 none; }
 
 #container .day .label
 {
+	cursor: pointer;
 	font-size: 1.5em;
 	font-weight: bold;
 	padding-left: 5px;

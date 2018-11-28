@@ -33,7 +33,7 @@ class TaskContextMenu
 		
 		let self = this
 		let items = [
-			generateMenuItem('View Time Spans', e => {
+			generateMenuItem('View Time Entries', e => {
 				e.preventDefault()
 				if(self.taskElement)
 				{

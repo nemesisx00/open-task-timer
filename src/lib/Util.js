@@ -1,12 +1,22 @@
 'use strict'
 
 const fs = require('fs')
+const moment = require('moment')
+require('moment-duration-format')
 const path = require('path')
 
 const defaultWriteFileOptions = {
 	truncate: false,
 	synchronous: false
 }
+
+const timestampFormat = 'Y-MM-DD HH:mm:ss'
+const timeFormat = 'y [years] d [days] hh:mm:ss'
+const timeOptions = Object.freeze({
+	forceLength: true,
+	useGrouping: false,
+	stopTrim: 'h'
+})
 
 class Util
 {
@@ -61,6 +71,36 @@ class Util
 		}
 		
 		return out
+	}
+	
+	/**
+	 * 
+	 */
+	static formatDate(date, format)
+	{
+		if(!date)
+			return null
+		
+		if(!format)
+			format = Util.Format_FullTimestamp
+		
+		return date.format(format)
+	}
+	
+	/**
+	 * 
+	 */
+	static formatDuration(duration, format, options)
+	{
+		if(!duration)
+			return null
+		
+		if(!format)
+			format = Util.Format_DurationTime
+		if(!options)
+			options = Util.Format_DurationTime_Options
+		
+		return duration.format(format, options)
 	}
 	
 	/**
@@ -138,5 +178,9 @@ class Util
 		}
 	}
 }
+
+Util.Format_FullTimestamp = timestampFormat
+Util.Format_DurationTime = timeFormat
+Util.Format_DurationTime_Options = timeOptions
 
 module.exports = Util

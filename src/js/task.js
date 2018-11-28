@@ -7,6 +7,7 @@ require('moment-duration-format')
 const sprintf = require('sprintf-js').sprintf
 
 const OneTimeEvents = load('event/OneTimeEvents')
+const Tools = load('ui/Tools')
 
 global.task = null
 
@@ -21,7 +22,7 @@ const dayTemplate = `
 `
 
 const timespanTemplate = `
-				<div class="timeSpan shrink%s">
+				<div class="timeSpan shrink%s hidden">
 					<div class="startTime">%s</div>
 					<div class="spacer shrink">-</div>
 					<div class="endTime">%s</div>
@@ -71,6 +72,13 @@ function buildDayHtml(date, spans)
 	return sprintf(dayTemplate, date, spanHtml.join('\n'))
 }
 
+function dayLabel_click(e)
+{
+	Array.from(e.target.parentElement.children)
+		.filter(el => el.className.indexOf('timeSpan') > -1)
+		.forEach(el => Tools.toggleClassName(el, 'hidden'))
+}
+
 ipcRenderer.on(OneTimeEvents.viewTask, (event, args) => {
 	if(args && args.task)
 	{
@@ -83,6 +91,13 @@ ipcRenderer.on(OneTimeEvents.viewTask, (event, args) => {
 				html.push(buildDayHtml(date, parsed[date]))
 		}
 		
+		document.getElementById('label').innerHTML = `${args.task.title}'s Time Entries`
 		document.getElementById('container').innerHTML = html.join('\n')
+		
+		let dayLabels = document.querySelectorAll('#container .day .label')
+		for(let el of dayLabels)
+		{
+			el.addEventListener('click', dayLabel_click)
+		}
 	}
 })
